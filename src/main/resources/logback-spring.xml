@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<configuration packagingData="true">
+    <springProperty scope="context" name="activeAppender" source="whale.logging.appender"/>
+    <springProperty scope="context" name="logLevel" source="logging.level.root"/>
+    <springProperty scope="context" name="logLevelJooq" source="logging.level.root.jooq"/>
+    <springProperty scope="context" name="profile" source="spring.profiles.active"/>
+
+    <contextListener class="ch.qos.logback.classic.jul.LevelChangePropagator">
+        <resetJUL>true</resetJUL>
+    </contextListener>
+
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{yyyy/MM/dd HH:mm:sss} %-5p %logger{16}:%line - %m [%marker]%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- 按照每天生成日志文件 -->
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>logs/spring3.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <!--日志文件输出的文件名-->
+            <!-- 每个切割的日志文件最大200MB，保留5天，但是所有文件最多2GB，超过2GB会删除最早的文件 -->
+            <fileNamePattern>logs/spring3.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <!--每个文件最大限制-->
+            <maxFileSize>500MB</maxFileSize>
+            <!--日志文件保留天数-->
+            <maxHistory>20</maxHistory>
+            <!--总文件限制大小-->
+            <totalSizeCap>15GB</totalSizeCap>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%d{yyyy/MM/dd HH:mm:sss} %-5p %logger{16}:%line - %m [%marker]%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="FILE_ERROR" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>logs/spring3_error.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <!-- 归档的日志文件的路径，%d{yyyy-MM-dd}指定日期格式，%i指定索引 -->
+            <!-- 每个切割的日志文件最大200MB，保留5天，但是所有文件最多1GB，超过1GB会删除最早的文件 -->
+            <fileNamePattern>logs/spring3_error.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <!--每个文件最大限制-->
+            <maxFileSize>500MB</maxFileSize>
+            <!--日志文件保留天数-->
+            <maxHistory>5</maxHistory>
+            <!--总文件限制大小-->
+            <totalSizeCap>5GB</totalSizeCap>
+        </rollingPolicy>
+        <!-- 日志文件的格式 -->
+        <encoder>
+            <pattern>%d{yyyy/MM/dd HH:mm:sss} %-5p %logger{16}:%line - %m [%marker]%n </pattern>
+        </encoder>
+        <!-- 此日志文件只记录error级别的 -->
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>error</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+    </appender>
+
+    <logger name="org.redisson.command" level="INFO"/>
+    <logger name="org.jooq.tools.LoggerListener" level="${logLevelJooq}"/>
+    <logger name="org.jooq.tools" level="${logLevelJooq}"/>
+
+    <root level="${logLevel}">
+        <appender-ref ref="${activeAppender}"/>
+        <appender-ref ref="FILE_ERROR"/>
+        <appender-ref ref="FILE"/>
+    </root>
+</configuration>

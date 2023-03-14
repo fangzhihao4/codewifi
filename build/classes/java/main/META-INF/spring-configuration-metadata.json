@@ -1,0 +1,47 @@
+{
+  "groups": [
+    {
+      "name": "redis.api",
+      "type": "codewifi.annotation.config.ApiRedisProperties",
+      "sourceType": "codewifi.annotation.config.ApiRedisProperties"
+    }
+  ],
+  "properties": [
+    {
+      "name": "redis.api.connect-timeout",
+      "type": "java.lang.Integer",
+      "sourceType": "codewifi.annotation.config.ApiRedisProperties",
+      "defaultValue": 0
+    },
+    {
+      "name": "redis.api.connection-pool-size",
+      "type": "java.lang.Integer",
+      "sourceType": "codewifi.annotation.config.ApiRedisProperties",
+      "defaultValue": 0
+    },
+    {
+      "name": "redis.api.mode",
+      "type": "java.lang.String",
+      "description": "Redis running mode, currently supports \"elastic\" && \"single\"",
+      "sourceType": "codewifi.annotation.config.ApiRedisProperties"
+    },
+    {
+      "name": "redis.api.nodes",
+      "type": "java.util.List<java.lang.String>",
+      "description": "Redis nodes",
+      "sourceType": "codewifi.annotation.config.ApiRedisProperties"
+    },
+    {
+      "name": "redis.api.pwd",
+      "type": "java.lang.String",
+      "sourceType": "codewifi.annotation.config.ApiRedisProperties"
+    },
+    {
+      "name": "redis.api.response-timeout",
+      "type": "java.lang.Integer",
+      "sourceType": "codewifi.annotation.config.ApiRedisProperties",
+      "defaultValue": 0
+    }
+  ],
+  "hints": []
+}
