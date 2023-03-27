@@ -52,7 +52,7 @@ public class UserCreateWifiMapper {
         context.update(UserCreateWifi.USER_CREATE_WIFI)
                 .set(UserCreateWifi.USER_CREATE_WIFI.TITLE, userCreateWifiModel.getTitle())
                 .set(UserCreateWifi.USER_CREATE_WIFI.NAME, userCreateWifiModel.getName())
-                .set(UserCreateWifi.USER_CREATE_WIFI.PASSWORD, userCreateWifiModel.getPassword())
+                .set(UserCreateWifi.USER_CREATE_WIFI.PASSWORD, userCreateWifiModel.getAddress())
                 .set(UserCreateWifi.USER_CREATE_WIFI.UPDATE_TIME, LocalDateTime.now())
                 .where(condition).execute();
     }
