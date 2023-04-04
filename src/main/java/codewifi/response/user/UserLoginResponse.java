@@ -8,6 +8,6 @@ import lombok.Setter;
 public class UserLoginResponse {
     String userNo;
     String token;
-    String username;
+    String nickname;
     String headerImg;
 }

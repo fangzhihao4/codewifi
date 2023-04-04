@@ -93,8 +93,8 @@ public class LoginServiceImpl implements LoginService {
             userProfitCache.createUserProfit(userNo);
         }
         String token = userLoginCommonService.setTokenByUserInfo(LoginTypeEnums.WX, userModel);
-        userLoginResponse.setUsername(userModel.getNickname());
-        userLoginResponse.setHeaderImg(userLoginResponse.getHeaderImg());
+        userLoginResponse.setNickname(userModel.getNickname());
+        userLoginResponse.setHeaderImg(userModel.getHeadImgUrl());
         userLoginResponse.setUserNo(userModel.getUserNo());
         userLoginResponse.setToken(token);
         return userLoginResponse;

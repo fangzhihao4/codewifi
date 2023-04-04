@@ -19,7 +19,7 @@ import java.util.Objects;
 public class UserMapper {
     private final DSLContext context;
 
-    public static final String HEADER_DEFAULT = "https://www.baidu.com/link?url=Nc-3ZzrTFgsu8C7mhz1kpOhN_Bgh2wdK6ZVwPitmzTcI8Oo6rNZOdiS-CiP3yHaL7b4zKVH3IKnOv76yDWx5Jwv7Px8k0_zRJJjkSDr1eEDTsileI1CcdTGLVoDAGW7OqqRPF5JGjYInMD0pXbN7A96EqMqxfuxaWCBwOYcDMp-8eF8rjeV8qkaNTwyB0xpxLX5Qyd34vcLwjpxsmH2HXVP70fnsAtukA5DCw3wLwXBjGn18O-uEcMBd63rw6G944oath2tiGl1Ks6N85uCTTau__oB1Yec6N8Bm9cD1QDC38LwVdvVZ5v2ItH7iXEMC37D-0lxUjFX7mpW7cTjaNwwkv6LuOl0TVz_LtGEJugDNsapGuAcuOnnIhlch1kiBtA2SE2YNbGEYQM5RlWGLq3Kk50_PJMmpxk0VTyT36JEYX9JjbhryUohhtAiG7eaoMxkuVqJffVs94J-4IV2OdIJLENqI_ognAHfXhNzLLMZ83M0RsdFkk0eL-vmeHBglL7ocdK6sbXcTvNp33zEEJzX2LjdNNLIeR5YIjx8GNq4uUYnDzfrliB2lg1CU-z1UCgZ00lrc3Wk-7MkiuSDnUEh4we3DY0o-2taa8YAGVUtS5KDwcE0HKSEgWvtKZuA_CdzolP9oVkl367Vbjshv7kPOxxclNz5VwwcSwbPE62W&wd=&eqid=96b3856d000386e30000000663f87596";
+    public static final String HEADER_DEFAULT = "https://wx.qlogo.cn/mmhead/Q3auHgzwzM7ibiclCric2EtiaDoeNSdAUyRicQxc1OgonEqWZhp9mu5ibhzw/0";
 
     public static final byte STATUS_IN = 1;
     public static final byte STATUS_DEL = 2;
