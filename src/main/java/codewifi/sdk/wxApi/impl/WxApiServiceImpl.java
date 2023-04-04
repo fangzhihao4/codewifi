@@ -119,7 +119,7 @@ public class WxApiServiceImpl implements WxApiService {
         Map<String,Object> map = new HashMap<>();
         map.put("scene", String.valueOf(scene));
         map.put("check_path", false);
-        map.put("env_version","develop");
+        map.put("env_version","release");
         map.put("page","pages/link/link/index");
 
         byte[] response;
