@@ -11,8 +11,6 @@ h
 8src/main/java/codewifi/request/wifi/LinkWifiRequest.java,5/e/5e93381b4c9eb4a09f950f33e91cb51840c09aba
 e
 5src/main/java/codewifi/annotation/XTransactionId.java,0/7/07874870406a16ad1cde974ac6892a5b4ee83804
-i
-9src/main/java/codewifi/controller/LinkWifiController.java,5/8/58929d752e54a928231b1d6e0c9c83a299219175
 k
 ;src/main/java/codewifi/annotation/XTransactionIdAspect.java,3/7/37ac9945619c53864280d48d13353a0dfa2e701f
 ]
