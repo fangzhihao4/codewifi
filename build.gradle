@@ -132,7 +132,7 @@ jooq {
                     driver = 'com.mysql.cj.jdbc.Driver'
                     url = 'jdbc:mysql://127.0.0.1:3306/codewifi?useUnicode=true'
                     user = 'root'
-                    password = ''
+                    password = '123456'
                     properties {
 
                     }
