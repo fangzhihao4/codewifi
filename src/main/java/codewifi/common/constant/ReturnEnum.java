@@ -50,6 +50,9 @@ public enum ReturnEnum {
 
 	UP_UPYUN_FILE_ERROR(13001,"又拍云失败",""),
 
+	STAR_FORTUNE_PARAMS_ERROR(15001,"查询星座运势参数错误",""),
+	GET_STAR_SDK_RESPONSE_ERROR(15002,"查询星座运势错误",""),
+
 
 	// business code
 	LAST_CODE(10000, "新加定义在此code前,方便不需要每次加code需更改逗号", "");

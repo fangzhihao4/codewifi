@@ -56,7 +56,13 @@ public class RedisKeyConstants {
 	public static final String USER_INVITE_PROFIT = HEADER + "user:invite:profit:page:";
 
 	public static final String WX_CODE_SCENE = HEADER + "wx:code:scene:";
+	public static final String LINK_USER_SORED = HEADER + "link:user:sort";
+	public static final String LINK_USER_HASH = HEADER + "link:user:hash";
 
+	public static final String LINK_ORDER_BY_LINK_NO = HEADER + "link:order:";
+
+	public static final String STAR_FORTUNE_CONTENT = HEADER + "star:fortune:user:"; //星座运势
+	public static final String STAR_FORTUNE_STRING = HEADER + "star:fortune:all:"; //星座运势
 
 
 	public static final String LOCAL_HEADER = "codewifi:lock:";
@@ -65,11 +71,7 @@ public class RedisKeyConstants {
 	public static final String LOCAL_USER_CREATE_WIFI = LOCAL_HEADER + "user:create:wifi:";
 
 
-	public static final String LINK_USER_SORED = "link:user:sort";
-	public static final String LINK_USER_HASH = "link:user:hash";
 
-
-	public static final String LINK_ORDER_BY_LINK_NO = "link:order:";
 
 
 }
