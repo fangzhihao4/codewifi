@@ -15,10 +15,6 @@ k
 -src/main/java/codewifi/common/IdGenerate.java,5/5/5567ed001a260df5f7392a595a94194e1cea9ac8
 j
 :src/main/java/codewifi/controller/UserIndexController.java,8/e/8e480e95245ba374d5d5cfc6fb6e5766029c9e95
-e
-5src/main/java/codewifi/service/UserProfitService.java,3/7/37b0854d8220f078481ac2046199d4501e54c2d5
-n
->src/main/java/codewifi/service/impl/UserProfitServiceImpl.java,a/1/a1fea276fcbc596b588dbdc4e24d79194402b0b8
 k
 ;src/main/java/codewifi/controller/UserInviteController.java,e/1/e18d70d16f918f415dc7aea3704729dbb597c45d
 l

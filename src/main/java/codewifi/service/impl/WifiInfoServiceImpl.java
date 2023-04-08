@@ -2,7 +2,6 @@ package codewifi.service.impl;
 
 import codewifi.annotation.exception.ReturnException;
 import codewifi.common.RedissonService;
-import codewifi.common.Response;
 import codewifi.common.YmlContent;
 import codewifi.common.constant.LogConstant;
 import codewifi.common.constant.RedisKeyConstants;
@@ -23,8 +22,6 @@ import codewifi.service.WifiInfoService;
 import codewifi.utils.*;
 import lombok.AllArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
-import org.jooq.False;
-import org.redisson.api.RBucket;
 import org.redisson.api.RLock;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;

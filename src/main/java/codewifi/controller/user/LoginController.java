@@ -6,7 +6,6 @@ import codewifi.request.user.UserLoginRequest;
 import codewifi.request.user.WxLoginCodeRequest;
 import codewifi.response.user.UserLoginResponse;
 import codewifi.service.LoginService;
-import codewifi.service.UserLoginCommonService;
 import codewifi.utils.LogUtil;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.RequestMapping;
