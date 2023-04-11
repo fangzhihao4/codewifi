@@ -1,77 +1,58 @@
 package codewifi.service.impl;
 
-import codewifi.annotation.exception.ReturnException;
-import codewifi.common.constant.ReturnEnum;
-import codewifi.common.constant.enums.HoroscopeEnum;
-import codewifi.repository.cache.UserStarCache;
-import codewifi.repository.model.UserModel;
-import codewifi.repository.model.UserStarRecordModel;
-import codewifi.request.wifi.StarFortuneRequest;
+import codewifi.common.RedissonService;
+import codewifi.common.constant.RedisKeyConstants;
 import codewifi.response.wifi.StarResponse;
 import codewifi.sdk.sdkHoroscope.HoroscopeSdkService;
 import codewifi.sdk.sdkHoroscope.response.HoroscopeSdkResponse;
-import codewifi.service.StarService;
 import codewifi.utils.LogUtil;
 import lombok.AllArgsConstructor;
 import org.jooq.tools.StringUtils;
+import org.redisson.api.RBucket;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 
 @Service
 @AllArgsConstructor
-public class StarServiceImpl implements StarService {
-    private static final LogUtil logUtil = LogUtil.getLogger(StarServiceImpl.class);
+public class ThirdStarService {
+    private static final LogUtil logUtil = LogUtil.getLogger(ThirdStarService.class);
 
     private static final String V1 = "user";
-    private static final String V2 = "LoginServiceImpl";
+    private static final String V2 = "ThirdStarService";
 
-    private final UserStarCache userStarCache;
+    private final RedissonService redissonService;
     private final HoroscopeSdkService horoscopeSdkService;
 
-    @Override
-    public StarResponse getStarContent(StarFortuneRequest request, UserModel userModel) {
+    public StarResponse getStarContent(String time, String star) {
         String v3 = "getStarContent";
-        String time = request.getTime();
-        String star = request.getStar();
-
-        HoroscopeEnum timeHoroscopeEnum = HoroscopeEnum.getTimeByType(time);
-        HoroscopeEnum starHoroscopeEnum = HoroscopeEnum.getStarByType(star);
-        if (Objects.isNull(timeHoroscopeEnum) || Objects.isNull(starHoroscopeEnum)){
-            logUtil.infoBug(V1, V2, v3, "查询星座运势参数错误", request, null);
-            throw new ReturnException(ReturnEnum.STAR_FORTUNE_PARAMS_ERROR);
-        }
         StarResponse starResponse = new StarResponse();
-        LocalDate localDate = LocalDate.now();
 
-        UserStarRecordModel userStarRecordModel = userStarCache.getUserByFortune(userModel.getUserNo(),timeHoroscopeEnum.getType(), starHoroscopeEnum.getType(), localDate);
-        if (Objects.nonNull(userStarRecordModel)){
-            starResponse.setContent(userStarRecordModel.getContent());
-            return starResponse;
+        HoroscopeSdkResponse horoscopeInfo = getStarContent(time,star,LocalDate.now());
+        if (Objects.isNull(horoscopeInfo)){
+            horoscopeInfo = horoscopeSdkService.getHoroscopeInfo(time, star);
+            if (Objects.isNull(horoscopeInfo) || Objects.isNull(horoscopeInfo.getData())){
+                logUtil.infoBug(V1, V2, v3, "查询星座运势参数错误", time, star);
+                return null;
+            }
+            setStarContent(time,star,LocalDate.now(),horoscopeInfo);
         }
-
-        String content = getContent(timeHoroscopeEnum.getType(),starHoroscopeEnum.getType(), localDate);
-        if (Objects.isNull(content)){
-            logUtil.infoBug(V1, V2, v3, "查询星座运势参数错误", request, null);
-            throw new ReturnException(ReturnEnum.GET_STAR_SDK_RESPONSE_ERROR);
-        }
-
-        starResponse.setContent(content);
-        userStarCache.addFortune(userModel.getUserNo(),timeHoroscopeEnum,starHoroscopeEnum,localDate,content);
+        starResponse.setContent(checkAndContent(horoscopeInfo));
         return starResponse;
     }
 
-    public String getContent(String time, String star, LocalDate localDate ){
-        String content = userStarCache.getStarContent(time,star, localDate);
-        if (Objects.nonNull(content)){
-            return content;
-        }
+    public void setStarContent(String time, String star, LocalDate localDate, HoroscopeSdkResponse horoscopeInfo){
+        String redisKey = RedisKeyConstants.STAR_FORTUNE_STRING + time + ":" + star + ":" + localDate;
+        RBucket<HoroscopeSdkResponse> bucket = redissonService.getBucket(redisKey, HoroscopeSdkResponse.class);
+        bucket.set(horoscopeInfo, RedisKeyConstants.EXPIRE_BY_DAY_SECONDS, TimeUnit.SECONDS );
+    }
 
-        HoroscopeSdkResponse horoscopeInfo = horoscopeSdkService.getHoroscopeInfo(time, star);
-        String checkContent = checkAndContent(horoscopeInfo);
-        userStarCache.setStarContent(time,star,localDate,checkContent);
-        return checkContent;
+    public HoroscopeSdkResponse getStarContent(String time, String star, LocalDate localDate){
+        String redisKey = RedisKeyConstants.STAR_FORTUNE_STRING + time + ":" + star + ":" + localDate;
+        RBucket<HoroscopeSdkResponse> bucket = redissonService.getBucket(redisKey, HoroscopeSdkResponse.class);
+        return bucket.get();
     }
 
     public String checkAndContent(HoroscopeSdkResponse horoscopeInfo){

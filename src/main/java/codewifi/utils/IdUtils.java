@@ -11,7 +11,10 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 @Slf4j
@@ -33,6 +36,17 @@ public class IdUtils {
         String endString = String.format("%03d",lastLong);
         String idString = Long.parseLong(headerString) * 4 + endString;
         return noNameEnum.getNoHeader() + Long.parseLong(idString);
+    }
+
+    public String getOrderNo(){
+        String timeString = DateTimeUtil.localDateTimeToDateString(LocalDateTime.now(), "yyyyMMddHHmmss");
+        RAtomicLong rAtomicLong = redissonService.getAtomicLong("order:id:"+ timeString);
+        int addNum = BigDecimal.valueOf(Math.random()).multiply(BigDecimal.valueOf(10)).intValue() + 1;
+        long lastLong = rAtomicLong.getAndAdd(addNum);
+        rAtomicLong.expire(5, TimeUnit.SECONDS);
+
+        String endString = String.format("%03d",lastLong);
+        return timeString + "0000" + endString;
     }
 
     public String getToken(String userNo){

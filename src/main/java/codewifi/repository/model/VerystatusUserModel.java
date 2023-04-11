@@ -12,6 +12,7 @@ public class VerystatusUserModel {
     Byte type;
     String unionid;
     String nickname;
+    Byte headType;
     String headImgUrl;
     String gender;
     String region;

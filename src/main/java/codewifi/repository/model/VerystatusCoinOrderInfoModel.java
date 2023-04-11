@@ -13,6 +13,8 @@ public class VerystatusCoinOrderInfoModel {
     Integer changeType;
     Integer source;
     String title;
+    Integer showType;
+    String contentImg;
     String content;
     LocalDate createDate;
     LocalDate createTime;

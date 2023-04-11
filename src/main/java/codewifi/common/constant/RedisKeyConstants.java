@@ -61,9 +61,6 @@ public class RedisKeyConstants {
 
 	public static final String LINK_ORDER_BY_LINK_NO = HEADER + "link:order:";
 
-	public static final String STAR_FORTUNE_CONTENT = HEADER + "star:fortune:user:"; //星座运势
-	public static final String STAR_FORTUNE_STRING = HEADER + "star:fortune:all:"; //星座运势
-
 
 	public static final String LOCAL_HEADER = "codewifi:lock:";
 
@@ -71,6 +68,26 @@ public class RedisKeyConstants {
 	public static final String LOCAL_USER_CREATE_WIFI = LOCAL_HEADER + "user:create:wifi:";
 
 
+
+
+
+	public static final String VERY_STATUS = "very:";
+	public static final String VERY_STATUS_SYSTEM_MENU = VERY_STATUS + "system:menu"; //系统菜单
+	public static final String VERY_STATUS_SYSTEM_GOODS = VERY_STATUS + "system:goods:"; //系统商品
+
+	public static final String VERY_STATUS_USER_TOKEN = VERY_STATUS + "user:token:" ; //用户token
+
+	public static final String VERY_STATUS_USER_WALLET = VERY_STATUS + "user:wallet:info:" ;//用户钱包
+	public static final String VERY_STATUS_USER_VIDEO = VERY_STATUS + "user:video:type:";//用户看视频
+	public static final String VERY_STATUS_USER_GOODS = VERY_STATUS + "user:goods:"; //用户商品信息
+	public static final String STAR_FORTUNE_STRING = VERY_STATUS + "third:star:all:"; //星座运势
+
+
+
+	public static final String VERY_LOCK = "very:lock:";
+	public static final String VERY_STATUS_LOCK_USER_VIDEO = VERY_LOCK +  "user:video:";//看视频的缓存
+	public static final String VERY_STATUS_LOCK_USER_GOODS_DAY_START = VERY_STATUS + "user:goods:day:start"; //商品每天第一次更新
+	public static final String VERY_STATUS_LOCK_USER_WALLET = VERY_STATUS + "user:wallet:change:";//金币钱包增减锁
 
 
 

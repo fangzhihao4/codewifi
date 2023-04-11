@@ -6,6 +6,7 @@ import codewifi.common.constant.ReturnEnum;
 import codewifi.common.constant.enums.LoginTypeEnums;
 import codewifi.repository.cache.UserLoginCache;
 import codewifi.repository.model.UserModel;
+import codewifi.repository.model.VerystatusUserModel;
 import codewifi.service.UserLoginCommonService;
 import codewifi.utils.IdUtils;
 import codewifi.utils.LogUtil;
@@ -39,5 +40,22 @@ public class UserLoginCommonServiceImpl implements UserLoginCommonService {
             throw new ReturnException(ReturnEnum.TOKEN_ERROR);
         }
         return userModel;
+    }
+
+    @Override
+    public String setVerystatusTokenByUserInfo(LoginTypeEnums loginTypeEnums, VerystatusUserModel verystatusUserModel) {
+        String token = idUtils.getToken(verystatusUserModel.getUserNo());
+        userLoginCache.setVerystatusRedisUserToken(token, verystatusUserModel, loginTypeEnums.getOutTime());
+        return token;
+    }
+
+    @Override
+    public VerystatusUserModel getVerystatusUserModelByToken(String token) {
+        VerystatusUserModel verystatusUserModel = userLoginCache.getVerystatusUserByToken(token);
+        if (Objects.isNull(verystatusUserModel)) {
+            logUtil.info("登录token过期", token);
+            throw new ReturnException(ReturnEnum.TOKEN_ERROR);
+        }
+        return verystatusUserModel;
     }
 }

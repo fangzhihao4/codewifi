@@ -1,8 +1,7 @@
-package codewifi.common.constant.enums;
+package codewifi.common.constant.enums.thrid;
 
 import lombok.Getter;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -61,7 +60,7 @@ public enum HoroscopeEnum {
     public static HoroscopeEnum getStarByType(String type){
         List<HoroscopeEnum> list = Arrays.asList(TAURUS,GEMINI,CANCER,LEO,YEAR,VIRGO,LIBRA,SCORPIO,SAGITTARIUS,CAPRICORN,AQUARIUS,PISCES,ARIES);
         for (HoroscopeEnum horoscopeEnum : list){
-            if (horoscopeEnum.getName().equals(type)){
+            if (horoscopeEnum.getType().equals(type)){
                 return horoscopeEnum;
             }
         }

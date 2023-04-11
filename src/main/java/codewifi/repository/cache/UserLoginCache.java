@@ -5,7 +5,9 @@ import cn.hutool.core.codec.Base64;
 import codewifi.common.RedissonService;
 import codewifi.common.constant.RedisKeyConstants;
 import codewifi.repository.mapper.UserMapper;
+import codewifi.repository.mapper.VerystatusUserMapper;
 import codewifi.repository.model.UserModel;
+import codewifi.repository.model.VerystatusUserModel;
 import com.alibaba.fastjson.JSON;
 import lombok.AllArgsConstructor;
 import org.checkerframework.checker.units.qual.A;
@@ -27,8 +29,7 @@ import java.util.logging.Handler;
 public class UserLoginCache {
     public final RedissonService redissonService;
     private final UserMapper userMapper;
-    private static final String HEX_STRING = "0123456789abcdef";
-    private static final char[] HEX_CHARS = HEX_STRING.toCharArray();
+    private final VerystatusUserMapper verystatusUserMapper;
 
 
     public void setRedisUserToken(String token, UserModel userModel, Integer expireTime) {
@@ -51,52 +52,25 @@ public class UserLoginCache {
 
 
 
-    public static void main(String[] args) {
-//        String username = "dzymt";
-        String username = "123";
-
-        String password = "dzymt@2022";
-//        String password = "testsign";
-        String method = "GetTicketTypes";
 
 
-        TreeMap<String,Object> bodyMap = new TreeMap<>();
-//        bodyMap.put("PageIndex",1);
-//        bodyMap.put("PageSize",20);
-//        bodyMap.put("TicketTypeId","14242c56-d538-48fe-8bb6-3777d897a6b3");
 
-        String requestBodyString = JSON.toJSONString(bodyMap);
 
-//        String requestBody = "eyJQYWdlSW5kZXgiOjEsIlBhZ2VTaXplIjoyMCwiVGlja2V0VHlwZUlkIjoiMTQyNDJjNTYtZDUzOC00OGZlLThiYjYtMzc3N2Q4OTdhNmIzIn0=";
-        String requestBody = Base64.encode(requestBodyString.getBytes(StandardCharsets.UTF_8));
-        String signBefore = username + method + requestBody + password;
-
-//        String signBefore = "123GetTicketTypeseyJQYWdlSW5kZXgiOjEsIlBhZ2VTaXplIjoyMCwiVGlja2V0VHlwZUlkIjoiMTQyNDJjNTYtZDUzOC00OGZlLThiYjYtMzc3N2Q4OTdhNmIzIn0=testsign";
-        String md5 = md5(signBefore);
-
-        System.out.println(requestBody);
-        System.out.println(md5);
+    public void setVerystatusRedisUserToken(String token, VerystatusUserModel verystatusUserModel, Integer expireTime) {
+        RBucket<VerystatusUserModel> bucket = redissonService.getBucket(RedisKeyConstants.VERY_STATUS_USER_TOKEN + token, VerystatusUserModel.class);
+        bucket.set(verystatusUserModel,expireTime, TimeUnit.SECONDS );
     }
 
-    public static String md5(String data) {
-        MessageDigest md = null;
-        try {
-            md = MessageDigest.getInstance("MD5");
-        }
-        catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException(e);
-        }
-        md.update(data.getBytes(StandardCharsets.UTF_8));
-        return toHexString(md.digest());
+    public VerystatusUserModel getVerystatusUserByToken(String token){
+        RBucket<VerystatusUserModel> bucket = redissonService.getBucket(RedisKeyConstants.VERY_STATUS_USER_TOKEN + token, VerystatusUserModel.class);
+        return bucket.get();
     }
-    public static String toHexString(byte[] b) {
-        StringBuilder sb = new StringBuilder(b.length * 2);
-        for (byte x : b) {
-            int hi = (x & 0xf0) >> 4;
-            int lo = x & 0x0f;
-            sb.append(HEX_CHARS[hi]);
-            sb.append(HEX_CHARS[lo]);
-        }
-        return sb.toString().trim();
+
+    public VerystatusUserModel getVerystatusUserByOpenId(String openid){
+        return verystatusUserMapper.getByOpenid(openid);
+    }
+
+    public VerystatusUserModel addVerystatusUserByWx(VerystatusUserModel verystatusUserModel){
+        return verystatusUserMapper.addUser(verystatusUserModel);
     }
 }

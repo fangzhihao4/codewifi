@@ -54,6 +54,17 @@ public enum ReturnEnum {
 	GET_STAR_SDK_RESPONSE_ERROR(15002,"查询星座运势错误",""),
 
 
+	USER_VIDEO_FAST(20001,"视频观看太快",""),
+	USER_VIDEO_IS_MAX(20002,"已经达到上限",""),
+	USER_VIDEO_ERROR(20002, "观看视频异常", ""),
+	NO_FUND_THIS_GOODS(20003,"没有此信息",""),
+	FREE_TIME_IS_MAX(20004,"免费次数到达上限",""),
+	NOT_USE_TYPE_GOODS(20005,"不支持的方式",""),
+	USER_COIN_LESS(20007,"金币不足",""),
+	GET_GOODS_CONTENT_FALSE(20008,"查询失败",""),
+	NO_FUND_USER_GOODS(20009,"初始化数据异常",""),
+	GOODS_PARAMS_ERROR(20010,"查询类型错误",""),
+
 	// business code
 	LAST_CODE(10000, "新加定义在此code前,方便不需要每次加code需更改逗号", "");
 

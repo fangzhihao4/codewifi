@@ -5,8 +5,6 @@ e
 5src/main/java/codewifi/controller/TestController.java,1/7/17924405b2c386feadf48b7ea343b793a1881ef8
 Y
 )src/main/java/codewifi/utils/LogUtil.java,0/5/05542c92f96e44356a0a5afa039b9594ccc959e2
-s
-Csrc/main/java/codewifi/common/constant/enums/LinkOrderTypeEnum.java,d/a/da8e87cb8d332a55c2f64fa5cdb76bad6b207816
 e
 5src/main/java/codewifi/annotation/XTransactionId.java,0/7/07874870406a16ad1cde974ac6892a5b4ee83804
 k
