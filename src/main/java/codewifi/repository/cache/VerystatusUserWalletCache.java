@@ -5,10 +5,8 @@ import codewifi.common.constant.RedisKeyConstants;
 import codewifi.repository.mapper.VerystatusUserWalletMapper;
 import codewifi.repository.model.VerystatusUserWalletModel;
 import lombok.AllArgsConstructor;
-import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.redisson.api.RBucket;
 import org.redisson.api.RLock;
-import org.slf4j.MDC;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -61,7 +59,6 @@ public class VerystatusUserWalletCache {
      */
     public boolean changeUserCoin(boolean changeType, String userNo, BigDecimal changeCoin){
         RLock rLock = redissonService.getLock(RedisKeyConstants.VERY_STATUS_LOCK_USER_WALLET + userNo);
-        //todo 锁有问题
         try {
             if (!rLock.tryLock(5, 5, TimeUnit.SECONDS))
                 return false;

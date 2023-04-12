@@ -2,10 +2,13 @@ package codewifi.service.impl;
 
 
 import codewifi.annotation.exception.ReturnException;
+import codewifi.common.RedissonService;
+import codewifi.common.constant.RedisKeyConstants;
 import codewifi.common.constant.ReturnEnum;
 import codewifi.common.constant.VerystatusConstants;
 import codewifi.common.constant.enums.LoginTypeEnums;
 import codewifi.common.constant.enums.NoNameEnum;
+import codewifi.common.constant.enums.VerystatusUserHeadEnum;
 import codewifi.repository.cache.UserLoginCache;
 import codewifi.repository.cache.UserProfitCache;
 import codewifi.repository.cache.VerystatusUserWalletCache;
@@ -16,6 +19,8 @@ import codewifi.repository.model.UserModel;
 import codewifi.repository.model.VerystatusUserModel;
 import codewifi.repository.model.VerystatusUserWalletModel;
 import codewifi.request.user.UserLoginRequest;
+import codewifi.request.user.WxUserHeadUpRequest;
+import codewifi.request.user.WxUserNicknameUpRequest;
 import codewifi.response.user.UserLoginResponse;
 import codewifi.response.user.VerystatusUserLoginResponse;
 import codewifi.sdk.wxApi.WxApiService;
@@ -26,11 +31,13 @@ import codewifi.utils.IdUtils;
 import codewifi.utils.LogUtil;
 import lombok.AllArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
+import org.redisson.api.RLock;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 
 @Service
 @AllArgsConstructor
@@ -46,6 +53,7 @@ public class LoginServiceImpl implements LoginService {
     private final WxApiService wxApiService;
     private final UserLoginCache userLoginCache;
     private final UserProfitCache userProfitCache;
+    private final RedissonService redissonService;
     private final VerystatusUserWalletCache verystatusUserWalletCache;
 
 
@@ -166,5 +174,68 @@ public class LoginServiceImpl implements LoginService {
         verystatusUserLoginResponse.setGem(BigDecimal.valueOf(0));
         verystatusUserLoginResponse.setToken(token);
         return verystatusUserLoginResponse;
+    }
+
+    @Override
+    public void wxVerystatusUpHead(String token, VerystatusUserModel userModel, WxUserHeadUpRequest wxUserHeadUpRequest) {
+        String v3 = "wxVerystatusUpHead";
+        if (!VerystatusUserMapper.HEAD_TYPE_LIST.contains(wxUserHeadUpRequest.getHeadType())){
+            logUtil.infoBug(V1, V2, v3, "头像类型错误", wxUserHeadUpRequest, null);
+            throw new ReturnException(ReturnEnum.TOKEN_CODE_ERROR);
+        }
+        if (VerystatusUserMapper.HEAD_TYPE_BASE.equals(wxUserHeadUpRequest.getHeadType())
+                && Objects.isNull(VerystatusUserHeadEnum.getHeadEnum(wxUserHeadUpRequest.getPageUrl()))){
+            logUtil.infoBug(V1, V2, v3, "头像地址太长", wxUserHeadUpRequest, null);
+            throw new ReturnException(ReturnEnum.HEAD_LENGTH_TOO_MAX);
+        }
+        RLock rLock = redissonService.getLock(RedisKeyConstants.VERY_STATUS_LOCK_USER_INFO_UPDATE + userModel.getUserNo());
+        try {
+            if (!rLock.tryLock(0, 5, TimeUnit.SECONDS)){
+                logUtil.infoBug(V1, V2, v3, "头像-用户信息更新锁在进行中", wxUserHeadUpRequest, null);
+                throw new ReturnException(ReturnEnum.USER_INFO_UP_ING);
+            }
+        }catch (InterruptedException ignored) {
+            logUtil.infoBug(V1, V2, v3, "头像更新锁异常", wxUserHeadUpRequest, null);
+            throw new ReturnException(ReturnEnum.USER_HEAD_UP_LOCK_ERROR);
+        }
+        // 执行业务
+        try {
+            userLoginCache.updateVerystatusHead(userModel.getUserNo(),token,wxUserHeadUpRequest.getHeadType(),wxUserHeadUpRequest.getPageUrl());
+        }
+        catch (Exception e) {
+            logUtil.infoBug(V1, V2, v3, "头像更新异常", wxUserHeadUpRequest, null);
+            throw new ReturnException(ReturnEnum.USER_HEAD_UP_ERROR);
+        }
+        finally {
+            if (rLock.isLocked())
+                rLock.unlock();
+        }
+    }
+
+    @Override
+    public void wxVerystatusUpNickname(String token, VerystatusUserModel userModel, WxUserNicknameUpRequest wxUserNicknameUpRequest) {
+        String v3 = "wxVerystatusUpNickname";
+        RLock rLock = redissonService.getLock(RedisKeyConstants.VERY_STATUS_LOCK_USER_INFO_UPDATE + userModel.getUserNo());
+        try {
+            if (!rLock.tryLock(0, 5, TimeUnit.SECONDS)){
+                logUtil.infoBug(V1, V2, v3, "昵称用户信息更新锁在进行中", wxUserNicknameUpRequest, null);
+                throw new ReturnException(ReturnEnum.USER_INFO_UP_ING);
+            }
+        }catch (InterruptedException ignored) {
+            logUtil.infoBug(V1, V2, v3, "昵称更新锁异常", wxUserNicknameUpRequest, null);
+            throw new ReturnException(ReturnEnum.USER_NICKNAME_LOCK_UP_ERROR);
+        }
+        // 执行业务
+        try {
+            userLoginCache.updateVerystatusNickname(userModel.getUserNo(),token, wxUserNicknameUpRequest.getNickname());
+        }
+        catch (Exception e) {
+            logUtil.infoBug(V1, V2, v3, "昵称更新异常", wxUserNicknameUpRequest, null);
+            throw new ReturnException(ReturnEnum.USER_NICKNAME_UP_ERROR);
+        }
+        finally {
+            if (rLock.isLocked())
+                rLock.unlock();
+        }
     }
 }

@@ -16,6 +16,10 @@ public enum VerystatusGoodsEnum {
     STAR_YEAR       (6, 3, 0,BigDecimal.valueOf(30), 1,  1, 1,"星座今年运势"),
     STAR_LOVE       (7, 3, 0,BigDecimal.valueOf(20), 1,  1, 1,"星座爱情运势"),
 
+    WORK_SAO_HUA    (8, 3, 5,BigDecimal.valueOf(2),  1,  999, 1,"骚话"),
+    WORK_QING_HUA   (9, 3, 5,BigDecimal.valueOf(2),  1,  999, 1,"情话"),
+
+
     TO_DAY_VIDEO    (1, 2, 0,BigDecimal.valueOf(20),10,  1, 0,"每日视频");
 
 

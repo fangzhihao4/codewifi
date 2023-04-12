@@ -1,4 +1,4 @@
-package codewifi.sdk.sdkHoroscope.response;
+package codewifi.sdk.sdkVhan.response;
 
 import lombok.Data;
 

@@ -8,8 +8,11 @@ import codewifi.repository.co.VerystatusGoodsUserCo;
 import codewifi.request.very.VerystatusPayGoodsRequest;
 import codewifi.response.wifi.StarResponse;
 import codewifi.service.VerystatusThirdService;
+import codewifi.service.impl.third.ThirdStarService;
+import codewifi.service.impl.third.ThirdVhanWorkService;
 import codewifi.utils.LogUtil;
 import lombok.AllArgsConstructor;
+import org.jooq.tools.StringUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.Objects;
@@ -24,6 +27,7 @@ public class VerystatusThirdServiceImpl implements VerystatusThirdService {
 
 
     private final ThirdStarService thirdStarService;
+    private final ThirdVhanWorkService thirdVhanWorkService;
 
     @Override
     public boolean getThirdContent(VerystatusGoodsUserCo verystatusGoodsUserCo, VerystatusPayGoodsRequest verystatusPayGoodsRequest) {
@@ -45,6 +49,12 @@ public class VerystatusThirdServiceImpl implements VerystatusThirdService {
         if (verystatusGoodsUserCo.getGoodsSku().equals(VerystatusGoodsEnum.STAR_LOVE.getGoodsSku())){
             return starContent(HoroscopeEnum.LOVE,verystatusGoodsUserCo,verystatusPayGoodsRequest);
         }
+        if (verystatusGoodsUserCo.getGoodsSku().equals(VerystatusGoodsEnum.WORK_SAO_HUA.getGoodsSku())){
+            return workSaoHua(verystatusGoodsUserCo);
+        }
+        if (verystatusGoodsUserCo.getGoodsSku().equals(VerystatusGoodsEnum.WORK_QING_HUA.getGoodsSku())){
+            return workQingHua(verystatusGoodsUserCo);
+        }
 
         return false;
     }
@@ -61,6 +71,24 @@ public class VerystatusThirdServiceImpl implements VerystatusThirdService {
             return false;
         }
         verystatusGoodsUserCo.setContent(starResponse.getContent());
+        return true;
+    }
+
+    public boolean workSaoHua(VerystatusGoodsUserCo verystatusGoodsUserCo){
+        String content = thirdVhanWorkService.getSaoHua(verystatusGoodsUserCo.getGoodsSku());
+        if (StringUtils.isEmpty(content)){
+            return false;
+        }
+        verystatusGoodsUserCo.setContent(content);
+        return true;
+    }
+
+    public boolean workQingHua(VerystatusGoodsUserCo verystatusGoodsUserCo){
+        String content = thirdVhanWorkService.getQingHua(verystatusGoodsUserCo.getGoodsSku());
+        if (StringUtils.isEmpty(content)){
+            return false;
+        }
+        verystatusGoodsUserCo.setContent(content);
         return true;
     }
 

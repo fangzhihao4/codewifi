@@ -1,28 +1,17 @@
 package codewifi.repository.cache;
 
-
-import cn.hutool.core.codec.Base64;
 import codewifi.common.RedissonService;
 import codewifi.common.constant.RedisKeyConstants;
 import codewifi.repository.mapper.UserMapper;
 import codewifi.repository.mapper.VerystatusUserMapper;
 import codewifi.repository.model.UserModel;
 import codewifi.repository.model.VerystatusUserModel;
-import com.alibaba.fastjson.JSON;
 import lombok.AllArgsConstructor;
-import org.checkerframework.checker.units.qual.A;
-import org.jooq.generated.tables.User;
 import org.redisson.api.RBucket;
 import org.springframework.stereotype.Service;
 
-import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
-import java.util.logging.Handler;
 
 @Service
 @AllArgsConstructor
@@ -72,5 +61,28 @@ public class UserLoginCache {
 
     public VerystatusUserModel addVerystatusUserByWx(VerystatusUserModel verystatusUserModel){
         return verystatusUserMapper.addUser(verystatusUserModel);
+    }
+
+    public void updateVerystatusHead(String userNo, String token,  Byte headType, String headUrl){
+        RBucket<VerystatusUserModel> bucket = redissonService.getBucket(RedisKeyConstants.VERY_STATUS_USER_TOKEN + token, VerystatusUserModel.class);
+        verystatusUserMapper.updateUserHead(userNo,headType,headUrl);
+        VerystatusUserModel verystatusUserModel =  bucket.get();
+        if (Objects.isNull(verystatusUserModel)){
+            return;
+        }
+        verystatusUserModel.setHeadType(headType);
+        verystatusUserModel.setHeadImgUrl(headUrl);
+        bucket.set(verystatusUserModel,RedisKeyConstants.EXPIRE_BY_TWO_HOUR,TimeUnit.SECONDS);
+    }
+
+    public void updateVerystatusNickname(String userNo, String token, String nickname){
+        RBucket<VerystatusUserModel> bucket = redissonService.getBucket(RedisKeyConstants.VERY_STATUS_USER_TOKEN + token, VerystatusUserModel.class);
+        verystatusUserMapper.updateUserNickname(userNo,nickname);
+        VerystatusUserModel verystatusUserModel =  bucket.get();
+        if (Objects.isNull(verystatusUserModel)){
+            return;
+        }
+        verystatusUserModel.setNickname(nickname);
+        bucket.set(verystatusUserModel,RedisKeyConstants.EXPIRE_BY_TWO_HOUR,TimeUnit.SECONDS);
     }
 }

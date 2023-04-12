@@ -1,10 +1,10 @@
-package codewifi.service.impl;
+package codewifi.service.impl.third;
 
 import codewifi.common.RedissonService;
 import codewifi.common.constant.RedisKeyConstants;
 import codewifi.response.wifi.StarResponse;
-import codewifi.sdk.sdkHoroscope.HoroscopeSdkService;
-import codewifi.sdk.sdkHoroscope.response.HoroscopeSdkResponse;
+import codewifi.sdk.sdkVhan.HoroscopeSdkService;
+import codewifi.sdk.sdkVhan.response.HoroscopeSdkResponse;
 import codewifi.utils.LogUtil;
 import lombok.AllArgsConstructor;
 import org.jooq.tools.StringUtils;

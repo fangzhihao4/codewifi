@@ -12,8 +12,8 @@ public class VerystatusUserModel {
     Byte type;
     String unionid;
     String nickname;
-    Byte headType;
-    String headImgUrl;
+    Byte headType; //头像类型 1网络地址 2本地地址
+    String headImgUrl; //头像值
     String gender;
     String region;
     Byte status;

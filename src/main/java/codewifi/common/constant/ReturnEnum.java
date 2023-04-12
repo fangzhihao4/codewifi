@@ -64,6 +64,13 @@ public enum ReturnEnum {
 	GET_GOODS_CONTENT_FALSE(20008,"查询失败",""),
 	NO_FUND_USER_GOODS(20009,"初始化数据异常",""),
 	GOODS_PARAMS_ERROR(20010,"查询类型错误",""),
+	NO_SUPPORT_HEAD_TYPE(20011,"不支持的头像",""),
+	HEAD_LENGTH_TOO_MAX(20012,"头像地址太长",""),
+	USER_INFO_UP_ING(20013,"用户信息更新中,请稍后再试",""),
+	USER_HEAD_UP_LOCK_ERROR(20014,"头像更新初始异常",""),
+	USER_HEAD_UP_ERROR(20015,"头像更新异常",""),
+	USER_NICKNAME_LOCK_UP_ERROR(20016,"昵称更新初始异常",""),
+	USER_NICKNAME_UP_ERROR(20017,"昵称更新异常",""),
 
 	// business code
 	LAST_CODE(10000, "新加定义在此code前,方便不需要每次加code需更改逗号", "");

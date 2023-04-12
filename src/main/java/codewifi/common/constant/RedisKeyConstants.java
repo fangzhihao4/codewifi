@@ -82,12 +82,16 @@ public class RedisKeyConstants {
 	public static final String VERY_STATUS_USER_GOODS = VERY_STATUS + "user:goods:"; //用户商品信息
 	public static final String STAR_FORTUNE_STRING = VERY_STATUS + "third:star:all:"; //星座运势
 
+	public static final String VERY_STATUS_WORK_SAO_HUA_RATE = VERY_STATUS + "third:work:sao:hua:rate"; //骚话查询数据库概率
+	public static final String VERY_STATUS_WORK_QING_HUA_RATE = VERY_STATUS + "third:work:qing:hua:rate"; //情话话查询数据库概率
+
 
 
 	public static final String VERY_LOCK = "very:lock:";
-	public static final String VERY_STATUS_LOCK_USER_VIDEO = VERY_LOCK +  "user:video:";//看视频的缓存
+	public static final String VERY_STATUS_LOCK_USER_VIDEO = VERY_LOCK +  "user:goods:video:";//看视频的缓存
 	public static final String VERY_STATUS_LOCK_USER_GOODS_DAY_START = VERY_STATUS + "user:goods:day:start"; //商品每天第一次更新
 	public static final String VERY_STATUS_LOCK_USER_WALLET = VERY_STATUS + "user:wallet:change:";//金币钱包增减锁
+	public static final String VERY_STATUS_LOCK_USER_INFO_UPDATE = VERY_LOCK + "user:info:update:"; //用户信息更新
 
 
 

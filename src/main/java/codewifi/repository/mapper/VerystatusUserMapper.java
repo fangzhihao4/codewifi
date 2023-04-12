@@ -7,11 +7,14 @@ import org.apache.commons.lang3.StringUtils;
 import org.jooq.Condition;
 import org.jooq.DSLContext;
 import org.jooq.generated.tables.User;
+import org.jooq.generated.tables.VerystatusGoodsUser;
 import org.jooq.generated.tables.VerystatusUser;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 
 @Repository
@@ -30,9 +33,10 @@ public class VerystatusUserMapper {
     public static final int USERNAME_LENGTH = 45;
     public static final int PASSWORD_LENGTH = 45;
 
-    public static final Byte HEAD_TYPE_HTTPS = 1;
-    public static final Byte HEAD_TYPE_BASE = 2;
-
+    public static final Byte HEAD_TYPE_HTTPS = 1; //头像 https路径
+    public static final Byte HEAD_TYPE_BASE = 2; //本地头像
+    public static final List<Byte> HEAD_TYPE_LIST = Arrays.asList(HEAD_TYPE_HTTPS,HEAD_TYPE_BASE);
+    public static final Integer HEAD_MAX_LENGTH = 1000; //头像最大长度
 
 
 
@@ -46,7 +50,22 @@ public class VerystatusUserMapper {
                 .fetchOneInto(VerystatusUserModel.class);
     }
 
+    public void updateUserHead(String userNo,Byte headType, String headUrl){
+        Condition condition = VerystatusUser.VERYSTATUS_USER.USER_NO.eq(userNo);
+        context.update(VerystatusUser.VERYSTATUS_USER)
+                .set(VerystatusUser.VERYSTATUS_USER.HEAD_TYPE, headType)
+                .set(VerystatusUser.VERYSTATUS_USER.HEAD_IMG_URL, headUrl)
+                .set(VerystatusUser.VERYSTATUS_USER.UPDATE_TIME, LocalDateTime.now())
+                .where(condition).execute();
+    }
 
+    public void updateUserNickname(String userNo, String nickname){
+        Condition condition = VerystatusUser.VERYSTATUS_USER.USER_NO.eq(userNo);
+        context.update(VerystatusUser.VERYSTATUS_USER)
+                .set(VerystatusUser.VERYSTATUS_USER.NICKNAME, nickname)
+                .set(VerystatusUser.VERYSTATUS_USER.UPDATE_TIME, LocalDateTime.now())
+                .where(condition).execute();
+    }
 
     public VerystatusUserModel addUser(VerystatusUserModel verystatusUserModel) {
         context.insertInto(VerystatusUser.VERYSTATUS_USER,
