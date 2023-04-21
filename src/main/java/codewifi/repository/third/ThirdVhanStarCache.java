@@ -26,10 +26,8 @@ public class ThirdVhanStarCache {
     private final RedissonService redissonService;
     private final HoroscopeSdkService horoscopeSdkService;
 
-    public StarResponse getStarContent(String time, String star) {
+    public HoroscopeSdkResponse.DataInfo getStarContent(String time, String star) {
         String v3 = "getStarContent";
-        StarResponse starResponse = new StarResponse();
-
         HoroscopeSdkResponse horoscopeInfo = getStarContent(time,star,LocalDate.now());
         if (Objects.isNull(horoscopeInfo)){
             horoscopeInfo = horoscopeSdkService.getHoroscopeInfo(time, star);
@@ -39,8 +37,7 @@ public class ThirdVhanStarCache {
             }
             setStarContent(time,star,LocalDate.now(),horoscopeInfo);
         }
-        starResponse.setContent(checkAndContent(horoscopeInfo));
-        return starResponse;
+        return horoscopeInfo.getData();
     }
 
     public void setStarContent(String time, String star, LocalDate localDate, HoroscopeSdkResponse horoscopeInfo){

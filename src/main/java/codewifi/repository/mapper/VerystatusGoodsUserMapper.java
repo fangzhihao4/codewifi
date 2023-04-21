@@ -103,22 +103,13 @@ public class VerystatusGoodsUserMapper {
      * @param verystatusGoodsUserModel
      * @return
      */
-    public VerystatusGoodsUserModel updateInfo(VerystatusGoodsUserModel verystatusGoodsUserModel){
-        Condition condition = VerystatusGoodsUser.VERYSTATUS_GOODS_USER.USER_NO.eq(verystatusGoodsUserModel.getUserNo())
-                .and(VerystatusGoodsUser.VERYSTATUS_GOODS_USER.GOODS_SKU.eq(verystatusGoodsUserModel.getGoodsSku()));
+    public void addVideo(String userNo,Integer goodSku){
+        Condition condition = VerystatusGoodsUser.VERYSTATUS_GOODS_USER.USER_NO.eq(userNo)
+                .and(VerystatusGoodsUser.VERYSTATUS_GOODS_USER.GOODS_SKU.eq(goodSku));
         context.update(VerystatusGoodsUser.VERYSTATUS_GOODS_USER)
-                .set(VerystatusGoodsUser.VERYSTATUS_GOODS_USER.CREATE_DATE, verystatusGoodsUserModel.getCreateDate())
-                .set(VerystatusGoodsUser.VERYSTATUS_GOODS_USER.PRICE_TYPE, verystatusGoodsUserModel.getPriceType().byteValue())
-                .set(VerystatusGoodsUser.VERYSTATUS_GOODS_USER.VIDEO_FINISH, verystatusGoodsUserModel.getVideoFinish())
-//                .set(VerystatusGoodsUser.VERYSTATUS_GOODS_USER.FINISH_TIMES, verystatusGoodsUserModel.getFinishTimes())
-                .set(VerystatusGoodsUser.VERYSTATUS_GOODS_USER.IS_FINISH, verystatusGoodsUserModel.getIsFinish().byteValue())
-                .set(VerystatusGoodsUser.VERYSTATUS_GOODS_USER.SHOW_TYPE, verystatusGoodsUserModel.getShowType().byteValue())
-                .set(VerystatusGoodsUser.VERYSTATUS_GOODS_USER.CONTENT_IMG, verystatusGoodsUserModel.getContentImg())
-                .set(VerystatusGoodsUser.VERYSTATUS_GOODS_USER.CONTENT, verystatusGoodsUserModel.getContent())
-//                .set(VerystatusGoodsUser.VERYSTATUS_GOODS_USER.USE_NUM, verystatusGoodsUserModel.getUseNum())
+                .set(VerystatusGoodsUser.VERYSTATUS_GOODS_USER.VIDEO_FINISH, VerystatusGoodsUser.VERYSTATUS_GOODS_USER.VIDEO_FINISH.add(1))
                 .set(VerystatusGoodsUser.VERYSTATUS_GOODS_USER.UPDATE_TIME, LocalDateTime.now())
                 .where(condition).execute();
-        return verystatusGoodsUserModel;
     }
 
     /**

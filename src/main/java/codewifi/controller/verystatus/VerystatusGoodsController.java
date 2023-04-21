@@ -7,6 +7,7 @@ import codewifi.repository.model.VerystatusUserModel;
 import codewifi.request.very.VerystatusGoodsInfoRequest;
 import codewifi.request.very.VerystatusIndexRequest;
 import codewifi.request.very.VerystatusPayGoodsRequest;
+import codewifi.request.very.VerystatusUserGoodsRequest;
 import codewifi.response.very.VerystatusGoodsUserInfoResponse;
 import codewifi.response.very.VerystatusIndexResponse;
 import codewifi.service.UserLoginCommonService;

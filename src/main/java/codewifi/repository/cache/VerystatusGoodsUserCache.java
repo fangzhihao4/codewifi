@@ -162,12 +162,19 @@ public class VerystatusGoodsUserCache {
         verystatusGoodsUserCo.setRepeatTotalNum(verystatusGoodsUserModel.getRepeatTotalNum());
         verystatusGoodsUserCo.setRepeatUseNum(verystatusGoodsUserModel.getRepeatUseNum());
         verystatusGoodsUserCo.setShowType(verystatusGoodsUserModel.getShowType());
+        verystatusGoodsUserCo.setContent(verystatusGoodsUserModel.getContent());
+        verystatusGoodsUserCo.setContentImg(verystatusGoodsUserModel.getContentImg());
         return verystatusGoodsUserCo;
     }
 
     public void updateUserGoods(VerystatusGoodsUserModel verystatusGoodsUserModel){
-        verystatusGoodsUserMapper.updateInfo(verystatusGoodsUserModel);
+        verystatusGoodsUserMapper.startDayInfo(verystatusGoodsUserModel);
         delRedisUserGoods(verystatusGoodsUserModel.getUserNo(),verystatusGoodsUserModel.getGoodsSku(),LocalDate.now());
+    }
+
+    public void addUserVideo(String userNo,Integer goodSku,LocalDate today){
+        verystatusGoodsUserMapper.addVideo(userNo,goodSku);
+        delRedisUserGoods(userNo,goodSku,today);
     }
 
 

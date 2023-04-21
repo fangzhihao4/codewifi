@@ -9,6 +9,8 @@ import lombok.AllArgsConstructor;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.stereotype.Service;
 
+import java.util.Objects;
+
 @Service
 @AllArgsConstructor
 public class HoroscopeSdkService {
@@ -37,6 +39,15 @@ public class HoroscopeSdkService {
         }
         catch (Exception e) {
             logUtil.infoError(LogConstant.V1, v2, v3, "查询星座数据转对象失败", null, response);
+            return null;
+        }
+        if (Objects.isNull(horoscopeSdkResponse)){
+            return null;
+        }
+        if (!Boolean.TRUE.equals(horoscopeSdkResponse.getSuccess())){
+            return null;
+        }
+        if (Objects.isNull(horoscopeSdkResponse.getData())){
             return null;
         }
         return horoscopeSdkResponse;

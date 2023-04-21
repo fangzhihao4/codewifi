@@ -8,7 +8,7 @@ import codewifi.repository.co.VerystatusGoodsUserCo;
 import codewifi.repository.third.ThirdVhanStarCache;
 import codewifi.repository.third.ThirdVhanWorkCache;
 import codewifi.request.very.VerystatusPayGoodsRequest;
-import codewifi.response.wifi.StarResponse;
+import codewifi.sdk.sdkVhan.response.HoroscopeSdkResponse;
 import codewifi.service.VerystatusThirdService;
 import codewifi.utils.LogUtil;
 import lombok.AllArgsConstructor;
@@ -59,6 +59,13 @@ public class VerystatusThirdServiceImpl implements VerystatusThirdService {
         return false;
     }
 
+    @Override
+    public void startGoodsInfo(VerystatusGoodsUserCo verystatusGoodsUserCo, VerystatusPayGoodsRequest verystatusPayGoodsRequest) {
+        if (verystatusGoodsUserCo.getGoodsSku().equals(VerystatusGoodsEnum.STAR_TODAY.getGoodsSku())){
+            starContent(HoroscopeEnum.TODAY,verystatusGoodsUserCo,verystatusPayGoodsRequest);
+        }
+    }
+
     public boolean starContent(HoroscopeEnum timeHoroscopeEnum,VerystatusGoodsUserCo verystatusGoodsUserCo,VerystatusPayGoodsRequest verystatusPayGoodsRequest){
         String v3 = "starContent";
         HoroscopeEnum horoscopeEnum = HoroscopeEnum.getStarByType(verystatusPayGoodsRequest.getParamFirst());
@@ -66,11 +73,11 @@ public class VerystatusThirdServiceImpl implements VerystatusThirdService {
             logUtil.infoWarn(V1,V2,v3,"商品类型错误", verystatusGoodsUserCo,verystatusPayGoodsRequest);
             throw new ReturnException(ReturnEnum.GOODS_PARAMS_ERROR);
         }
-        StarResponse starResponse = thirdVhanStarCache.getStarContent(timeHoroscopeEnum.getType(), horoscopeEnum.getType());
-        if (Objects.isNull(starResponse)) {
+        HoroscopeSdkResponse.DataInfo dataInfo = thirdVhanStarCache.getStarContent(timeHoroscopeEnum.getType(), horoscopeEnum.getType());
+        if (Objects.isNull(dataInfo)) {
             return false;
         }
-        verystatusGoodsUserCo.setContent(starResponse.getContent());
+        verystatusGoodsUserCo.setOther(dataInfo);
         return true;
     }
 

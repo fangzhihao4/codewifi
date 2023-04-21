@@ -128,10 +128,6 @@ r
 Bsrc/main/java/codewifi/repository/mapper/UserCreateWifiMapper.java,1/8/181dff5da159b16e39d2ccee4e7049360793d0ba
 ^
 .src/main/java/codewifi/utils/DateTimeUtil.java,3/b/3b46bbe930799f080a35317ffd7c0c4ae4d540e5
-f
-6src/main/java/codewifi/response/wifi/StarResponse.java,a/2/a252ef9afc0daf592feeb0288959a46d28a31bed
-z
-Jsrc/main/java/codewifi/common/constant/enums/VerystatusCoinSourceEnum.java,a/6/a6c92de6f7ea11ceb315adebf9313ce56bbb6ed0
 k
 ;src/main/java/codewifi/request/wifi/StarFortuneRequest.java,b/5/b5806722b14216566434e8e5fd15f40f66668957
 e
@@ -168,8 +164,6 @@ x
 Hsrc/main/java/codewifi/repository/mapper/VerystatusUserWalletMapper.java,7/2/72afa145288e6a80b35cdd68a9e9c538b9f4e038
 j
 :src/main/java/codewifi/service/UserLoginCommonService.java,f/9/f93e0bc40faac900372ad7df38d79c4ee0ee7e2f
-j
-:src/main/java/codewifi/service/VerystatusThirdService.java,d/8/d88c6a83c838cfb64c7057dadbf93b5e8fc79b1a
 x
 Hsrc/main/java/codewifi/repository/model/VerystatusGoodsContentModel.java,a/4/a40195e611d1a5dc102422d93be0da42e12f58e6
 {
@@ -184,12 +178,8 @@ p
 @src/main/java/codewifi/repository/model/VerystatusUserModel.java,e/9/e937aa34b8b574b7020f407ee890d921d903de0a
 z
 Jsrc/main/java/codewifi/repository/mapper/VerystatusGoodsContentMapper.java,a/4/a48e4f9bdd96cf2d629913fd941cf0dc039eb29a
-s
-Csrc/main/java/codewifi/repository/mapper/VerystatusGoodsMapper.java,c/c/cc98fc83a21d445ea8ac946449ca35b51e7f78f7
 `
 0src/main/java/codewifi/service/LoginService.java,e/2/e25fa82c64c30856eb1a303dcb04100e95ac9de2
-v
-Fsrc/main/java/codewifi/repository/cache/VerystatusUserWalletCache.java,f/4/f4c725cc023a019b72a4eac68e10c8d50318e521
 t
 Dsrc/main/java/codewifi/common/constant/enums/VerystatusMenuEnum.java,b/e/be81d624bbd441acec3487b4b3d44a94f77f7b58
 i

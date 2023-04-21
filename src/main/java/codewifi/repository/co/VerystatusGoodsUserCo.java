@@ -17,4 +17,7 @@ public class VerystatusGoodsUserCo {
     Integer repeatTotalNum;//可重复次数
     Integer repeatUseNum;//已经重复次数
     Integer showType;//显示类型 1文本内容 2图片  3文本加图片
+    String content;
+    String contentImg;
+    Object other;
 }
