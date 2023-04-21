@@ -81,6 +81,7 @@ public class RedisKeyConstants {
 	public static final String VERY_STATUS_USER_VIDEO = VERY_STATUS + "user:video:type:";//用户看视频
 	public static final String VERY_STATUS_USER_GOODS = VERY_STATUS + "user:goods:"; //用户商品信息
 	public static final String STAR_FORTUNE_STRING = VERY_STATUS + "third:star:all:"; //星座运势
+	public static final String VERY_STATUS_HOT_HU_PU_HASH = VERY_STATUS +  "third:hot:hu:pu:hash"; //热榜虎扑
 
 	public static final String VERY_STATUS_WORK_SAO_HUA_RATE = VERY_STATUS + "third:work:sao:hua:rate"; //骚话查询数据库概率
 	public static final String VERY_STATUS_WORK_QING_HUA_RATE = VERY_STATUS + "third:work:qing:hua:rate"; //情话话查询数据库概率

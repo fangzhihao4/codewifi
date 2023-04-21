@@ -4,6 +4,7 @@ import codewifi.annotation.ProRequestBody;
 import codewifi.annotation.Token;
 import codewifi.common.Response;
 import codewifi.repository.model.VerystatusUserModel;
+import codewifi.request.very.VerystatusGoodsInfoRequest;
 import codewifi.request.very.VerystatusIndexRequest;
 import codewifi.request.very.VerystatusPayGoodsRequest;
 import codewifi.response.very.VerystatusGoodsUserInfoResponse;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequestMapping("/very/goods")
@@ -37,6 +39,15 @@ public class VerystatusGoodsController {
         VerystatusGoodsUserInfoResponse userGoods = verystatusGoodsUserService.getUserGoods(verystatusUserModel, verystatusPayGoodsRequest);
         logUtil.info(V1,V2,"index","返回日志",verystatusPayGoodsRequest,userGoods);
         return Response.data(userGoods);
+    }
+
+    @RequestMapping("/list")
+    public Response<List<VerystatusGoodsUserInfoResponse>> list(@ProRequestBody @Valid VerystatusGoodsInfoRequest verystatusGoodsInfoRequest, @Token String token) {
+        logUtil.info(V1,V2,"index","请求日志",verystatusGoodsInfoRequest,token);
+        VerystatusUserModel verystatusUserModel = userLoginCommonService.getVerystatusUserModelByToken(token);
+//        VerystatusGoodsUserInfoResponse userGoods = verystatusGoodsUserService.getUserGoods(verystatusUserModel, verystatusGoodsInfoRequest);
+//        logUtil.info(V1,V2,"index","返回日志",verystatusGoodsInfoRequest,userGoods);
+        return Response.data(null);
     }
 
     @RequestMapping("/pay")

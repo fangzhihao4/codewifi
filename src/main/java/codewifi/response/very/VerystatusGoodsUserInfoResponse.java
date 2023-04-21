@@ -18,5 +18,6 @@ public class VerystatusGoodsUserInfoResponse {
     Integer showType;//显示类型 1文本内容 2图片  3文本加图片
     String content;
     String contentImg;
+    Object other;
     Integer userUseNum;//以及使用免费次数
 }

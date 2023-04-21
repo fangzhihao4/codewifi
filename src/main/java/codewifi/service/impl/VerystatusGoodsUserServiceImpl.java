@@ -11,6 +11,7 @@ import codewifi.repository.mapper.VerystatusCoinOrderMapper;
 import codewifi.repository.mapper.VerystatusGoodsMapper;
 import codewifi.repository.mapper.VerystatusGoodsUserMapper;
 import codewifi.repository.model.*;
+import codewifi.request.very.VerystatusGoodsInfoRequest;
 import codewifi.request.very.VerystatusPayGoodsRequest;
 import codewifi.response.very.VerystatusGoodsUserInfoResponse;
 import codewifi.service.VerystatusGoodsUserService;
@@ -23,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Objects;
 
 @Service
@@ -64,6 +66,11 @@ public class VerystatusGoodsUserServiceImpl implements VerystatusGoodsUserServic
             }
         }
         return getResByCo(verystatusGoodsUserCo);
+    }
+
+    @Override
+    public List<VerystatusGoodsUserInfoResponse> getUserGoodsList(VerystatusUserModel verystatusUserModel, VerystatusGoodsInfoRequest verystatusGoodsInfoRequest) {
+        return null;
     }
 
     /**

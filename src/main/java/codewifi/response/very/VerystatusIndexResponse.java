@@ -15,8 +15,10 @@ public class VerystatusIndexResponse {
 
     @Data
     public static class MenuList{
-        String name;
-        Integer type;
-        String pageUrl;
+        String name; //名称
+        Integer type; //类型
+        String page; //路径
+        String badge; //右上角说明
+        String url; //图片路径
     }
 }

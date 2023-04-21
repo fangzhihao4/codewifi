@@ -1,4 +1,4 @@
-package codewifi.service.impl.third;
+package codewifi.repository.third;
 
 import codewifi.common.RedissonService;
 import codewifi.common.constant.RedisKeyConstants;
@@ -17,8 +17,8 @@ import java.util.concurrent.TimeUnit;
 
 @Service
 @AllArgsConstructor
-public class ThirdStarService {
-    private static final LogUtil logUtil = LogUtil.getLogger(ThirdStarService.class);
+public class ThirdVhanStarCache {
+    private static final LogUtil logUtil = LogUtil.getLogger(ThirdVhanStarCache.class);
 
     private static final String V1 = "user";
     private static final String V2 = "ThirdStarService";

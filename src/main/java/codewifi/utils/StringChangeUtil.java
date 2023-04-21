@@ -37,4 +37,15 @@ public class StringChangeUtil {
             return null;
         }
     }
+
+    public static int strToInt(String str){
+        if (Objects.isNull(str)){
+            return 0;
+        }
+        try {
+            return Integer.parseInt(str.trim());
+        }catch (Exception e){
+            return 0;
+        }
+    }
 }

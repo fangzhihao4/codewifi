@@ -5,11 +5,11 @@ import codewifi.common.constant.ReturnEnum;
 import codewifi.common.constant.enums.VerystatusGoodsEnum;
 import codewifi.common.constant.enums.thrid.HoroscopeEnum;
 import codewifi.repository.co.VerystatusGoodsUserCo;
+import codewifi.repository.third.ThirdVhanStarCache;
+import codewifi.repository.third.ThirdVhanWorkCache;
 import codewifi.request.very.VerystatusPayGoodsRequest;
 import codewifi.response.wifi.StarResponse;
 import codewifi.service.VerystatusThirdService;
-import codewifi.service.impl.third.ThirdStarService;
-import codewifi.service.impl.third.ThirdVhanWorkService;
 import codewifi.utils.LogUtil;
 import lombok.AllArgsConstructor;
 import org.jooq.tools.StringUtils;
@@ -26,8 +26,8 @@ public class VerystatusThirdServiceImpl implements VerystatusThirdService {
     private static final String V2 = "VerystatusThirdServiceImpl";
 
 
-    private final ThirdStarService thirdStarService;
-    private final ThirdVhanWorkService thirdVhanWorkService;
+    private final ThirdVhanStarCache thirdVhanStarCache;
+    private final ThirdVhanWorkCache thirdVhanWorkCache;
 
     @Override
     public boolean getThirdContent(VerystatusGoodsUserCo verystatusGoodsUserCo, VerystatusPayGoodsRequest verystatusPayGoodsRequest) {
@@ -66,7 +66,7 @@ public class VerystatusThirdServiceImpl implements VerystatusThirdService {
             logUtil.infoWarn(V1,V2,v3,"商品类型错误", verystatusGoodsUserCo,verystatusPayGoodsRequest);
             throw new ReturnException(ReturnEnum.GOODS_PARAMS_ERROR);
         }
-        StarResponse starResponse = thirdStarService.getStarContent(timeHoroscopeEnum.getType(), horoscopeEnum.getType());
+        StarResponse starResponse = thirdVhanStarCache.getStarContent(timeHoroscopeEnum.getType(), horoscopeEnum.getType());
         if (Objects.isNull(starResponse)) {
             return false;
         }
@@ -75,7 +75,7 @@ public class VerystatusThirdServiceImpl implements VerystatusThirdService {
     }
 
     public boolean workSaoHua(VerystatusGoodsUserCo verystatusGoodsUserCo){
-        String content = thirdVhanWorkService.getSaoHua(verystatusGoodsUserCo.getGoodsSku());
+        String content = thirdVhanWorkCache.getSaoHua(verystatusGoodsUserCo.getGoodsSku());
         if (StringUtils.isEmpty(content)){
             return false;
         }
@@ -84,7 +84,7 @@ public class VerystatusThirdServiceImpl implements VerystatusThirdService {
     }
 
     public boolean workQingHua(VerystatusGoodsUserCo verystatusGoodsUserCo){
-        String content = thirdVhanWorkService.getQingHua(verystatusGoodsUserCo.getGoodsSku());
+        String content = thirdVhanWorkCache.getQingHua(verystatusGoodsUserCo.getGoodsSku());
         if (StringUtils.isEmpty(content)){
             return false;
         }
