@@ -4,21 +4,25 @@ import codewifi.annotation.ProRequestBody;
 import codewifi.annotation.Token;
 import codewifi.common.Response;
 import codewifi.repository.model.VerystatusUserModel;
-import codewifi.request.very.VerystatusGoodsInfoRequest;
-import codewifi.request.very.VerystatusIndexRequest;
-import codewifi.request.very.VerystatusPayGoodsRequest;
-import codewifi.request.very.VerystatusUserGoodsRequest;
+import codewifi.request.very.*;
+import codewifi.response.very.VerystatusGoodsMoreResponse;
 import codewifi.response.very.VerystatusGoodsUserInfoResponse;
-import codewifi.response.very.VerystatusIndexResponse;
 import codewifi.service.UserLoginCommonService;
 import codewifi.service.VerystatusGoodsUserService;
-import codewifi.service.VerystatusIndexService;
+import codewifi.utils.FileUtil;
 import codewifi.utils.LogUtil;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -58,5 +62,27 @@ public class VerystatusGoodsController {
         VerystatusGoodsUserInfoResponse userGoods = verystatusGoodsUserService.getUserPayContent(verystatusUserModel, verystatusPayGoodsRequest);
         logUtil.info(V1,V2,"index","返回日志",verystatusPayGoodsRequest,userGoods);
         return Response.data(userGoods);
+    }
+
+    @RequestMapping("/page")
+    public Response<Object> page(@ProRequestBody @Valid VerystatusGoodsMoreRequest verystatusGoodsMoreRequest, @Token String token) {
+        logUtil.info(V1,V2,"index","请求日志",verystatusGoodsMoreRequest,token);
+        VerystatusUserModel verystatusUserModel = userLoginCommonService.getVerystatusUserModelByToken(token);
+        VerystatusGoodsMoreResponse verystatusGoodsMoreResponse = verystatusGoodsUserService.getGoodsMore(verystatusUserModel, verystatusGoodsMoreRequest);
+        logUtil.info(V1,V2,"index","返回日志",verystatusGoodsMoreRequest,verystatusGoodsMoreResponse);
+        return Response.data(verystatusGoodsMoreResponse);
+    }
+
+    @RequestMapping("/image")
+    public Response<Object> image(@ProRequestBody @Valid VerystatusGoodsMoreRequest verystatusGoodsMoreRequest, @Token String token) throws IOException {
+        String imageUrl = "https://api.vvhan.com/api/tao";
+//        String imageUrl = "https://api.vvhan.com/api/tao";
+        URL url = new URL(imageUrl);
+        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+        connection.setInstanceFollowRedirects(false);
+        connection.connect();
+        String imageUrlFinal = connection.getHeaderField("location");
+        System.out.println(imageUrlFinal);
+        return Response.data(imageUrlFinal);
     }
 }

@@ -30,9 +30,9 @@ public class VerystatusIndexServiceImpl implements VerystatusIndexService {
         LocalDate today = LocalDate.now();
 
         VerystatusGoodsUserCo verystatusGoodsUserCo = verystatusGoodsUserCache.getUserGoods(userNo, goodsSku, today);
-        verystatusIndexResponse.setIsFinishVideo(verystatusGoodsUserCo.getUserIsFinish());
-        verystatusIndexResponse.setVideoFinish(verystatusGoodsUserCo.getUserVideoFinish());
-        verystatusIndexResponse.setVideoTotal(verystatusGoodsUserCo.getVideoNum());
+        verystatusIndexResponse.setIsFinishVideo(verystatusGoodsUserCo.getIsFinish());
+        verystatusIndexResponse.setVideoFinish(verystatusGoodsUserCo.getVideoFinish());
+        verystatusIndexResponse.setVideoTotal(verystatusGoodsUserCo.getVideoNeed());
 
         List<VerystatusMenuConfigModel> allConfig = verystatusMenuConfigCache.getAllConfig();
         List<VerystatusIndexResponse.MenuList> menuLists = BeanCopyUtils.copyListProperties(allConfig, VerystatusIndexResponse.MenuList::new);

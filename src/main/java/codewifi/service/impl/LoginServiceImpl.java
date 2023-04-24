@@ -190,7 +190,7 @@ public class LoginServiceImpl implements LoginService {
         }
         RLock rLock = redissonService.getLock(RedisKeyConstants.VERY_STATUS_LOCK_USER_INFO_UPDATE + userModel.getUserNo());
         try {
-            if (!rLock.tryLock(0, 5, TimeUnit.SECONDS)){
+            if (rLock.tryLock(0, 5, TimeUnit.SECONDS)){
                 logUtil.infoBug(V1, V2, v3, "头像-用户信息更新锁在进行中", wxUserHeadUpRequest, null);
                 throw new ReturnException(ReturnEnum.USER_INFO_UP_ING);
             }
@@ -217,7 +217,7 @@ public class LoginServiceImpl implements LoginService {
         String v3 = "wxVerystatusUpNickname";
         RLock rLock = redissonService.getLock(RedisKeyConstants.VERY_STATUS_LOCK_USER_INFO_UPDATE + userModel.getUserNo());
         try {
-            if (!rLock.tryLock(0, 5, TimeUnit.SECONDS)){
+            if (rLock.tryLock(0, 5, TimeUnit.SECONDS)){
                 logUtil.infoBug(V1, V2, v3, "昵称用户信息更新锁在进行中", wxUserNicknameUpRequest, null);
                 throw new ReturnException(ReturnEnum.USER_INFO_UP_ING);
             }

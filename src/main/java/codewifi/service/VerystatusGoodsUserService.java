@@ -2,6 +2,7 @@ package codewifi.service;
 
 import codewifi.repository.model.VerystatusUserModel;
 import codewifi.request.very.VerystatusGoodsInfoRequest;
+import codewifi.request.very.VerystatusGoodsMoreRequest;
 import codewifi.request.very.VerystatusPayGoodsRequest;
 import codewifi.request.very.VerystatusUserGoodsRequest;
 import codewifi.response.very.VerystatusGoodsMoreResponse;
@@ -18,5 +19,5 @@ public interface VerystatusGoodsUserService {
 
     VerystatusGoodsUserInfoResponse getUserPayContent(VerystatusUserModel verystatusUserModel, VerystatusPayGoodsRequest verystatusPayGoodsRequest);
 
-    VerystatusGoodsMoreResponse getGoodsMore(VerystatusUserModel verystatusUserModel, VerystatusGoodsMoreResponse verystatusGoodsMoreResponse);
+    VerystatusGoodsMoreResponse getGoodsMore(VerystatusUserModel verystatusUserModel, VerystatusGoodsMoreRequest verystatusGoodsMoreRequest);
 }

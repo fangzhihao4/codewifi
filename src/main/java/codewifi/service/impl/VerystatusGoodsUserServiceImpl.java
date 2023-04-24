@@ -12,6 +12,7 @@ import codewifi.repository.mapper.VerystatusGoodsMapper;
 import codewifi.repository.mapper.VerystatusGoodsUserMapper;
 import codewifi.repository.model.*;
 import codewifi.request.very.VerystatusGoodsInfoRequest;
+import codewifi.request.very.VerystatusGoodsMoreRequest;
 import codewifi.request.very.VerystatusPayGoodsRequest;
 import codewifi.response.very.VerystatusGoodsMoreResponse;
 import codewifi.response.very.VerystatusGoodsUserInfoResponse;
@@ -175,6 +176,7 @@ public class VerystatusGoodsUserServiceImpl implements VerystatusGoodsUserServic
             VerystatusGoodsUserInfoResponse verystatusGoodsUserInfoResponse = getResByCo(verystatusGoodsUserCo);
             verystatusGoodsUserInfoResponse.setContentImg(verystatusGoodsUserCo.getContentImg());
             verystatusGoodsUserInfoResponse.setContent(verystatusGoodsUserCo.getContent());
+            verystatusGoodsUserInfoResponse.setOther(verystatusGoodsUserCo.getOther());
 
             finishUserGoods(userModel,verystatusGoodsUserCo,VerystatusGoodsMapper.price_free);
             return verystatusGoodsUserInfoResponse;
@@ -328,8 +330,15 @@ public class VerystatusGoodsUserServiceImpl implements VerystatusGoodsUserServic
 
 
     @Override
-    public VerystatusGoodsMoreResponse getGoodsMore(VerystatusUserModel verystatusUserModel, VerystatusGoodsMoreResponse verystatusGoodsMoreResponse) {
-        return null;
+    public VerystatusGoodsMoreResponse getGoodsMore(VerystatusUserModel verystatusUserModel, VerystatusGoodsMoreRequest verystatusGoodsMoreRequest) {
+        Object content = verystatusThirdService.thirdPage(verystatusGoodsMoreRequest);
+        if (Objects.isNull(content)){
+            return null;
+        }
+        VerystatusGoodsMoreResponse verystatusGoodsMoreResponse = new VerystatusGoodsMoreResponse();
+        verystatusGoodsMoreResponse.setData(content);
+        verystatusGoodsMoreRequest.setPage(verystatusGoodsMoreRequest.getPage() + 1);
+        return verystatusGoodsMoreResponse;
     }
 
 }

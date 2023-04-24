@@ -66,6 +66,7 @@ public class VerystatusGoodsUserCache {
 
         //重新初始化
         VerystatusGoodsUserModel verystatusGoodsUserModelStart = goodsToUserGoods(verystatusGoodsModel,today);
+        verystatusGoodsUserModelStart.setUserNo(userNo);
         addOrStartUserGoods(today,verystatusGoodsUserModel,verystatusGoodsUserModelStart );
         verystatusGoodsUserCo = userGoodToCache(verystatusGoodsUserModelStart);
         bucket.set(verystatusGoodsUserCo,RedisKeyConstants.EXPIRE_BY_TWO_HOUR,TimeUnit.SECONDS);
@@ -102,7 +103,7 @@ public class VerystatusGoodsUserCache {
         String lockKey = RedisKeyConstants.VERY_STATUS_LOCK_USER_GOODS_DAY_START + verystatusGoodsUserModelStart.getUserNo() + verystatusGoodsUserModelStart.getGoodsSku();
         RLock linkLock = redissonService.getLock(lockKey);
         try {
-            if (!linkLock.tryLock(RedisKeyConstants.EXPIRE_BY_FIVE_SECONDS, 0, TimeUnit.MINUTES)) {
+            if (linkLock.tryLock(0, RedisKeyConstants.EXPIRE_BY_FIVE_SECONDS, TimeUnit.MINUTES)) {
                 //如果数据库有 且不是当天的
                 if (Objects.nonNull(verystatusGoodsUserModel) && !today.equals(verystatusGoodsUserModel.getCreateDate())){
                     verystatusGoodsUserMapper.startDayInfo(verystatusGoodsUserModelStart);
@@ -115,6 +116,9 @@ public class VerystatusGoodsUserCache {
             }
         } catch (InterruptedException ignored) {
             return;
+        }finally {
+            if (linkLock.isLocked())
+                linkLock.unlock();
         }
     }
 

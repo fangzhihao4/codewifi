@@ -4,9 +4,13 @@ import codewifi.annotation.exception.ReturnException;
 import codewifi.common.constant.ReturnEnum;
 import codewifi.common.constant.enums.VerystatusGoodsEnum;
 import codewifi.common.constant.enums.thrid.HoroscopeEnum;
+import codewifi.repository.co.ThirdVhanHotCo;
 import codewifi.repository.co.VerystatusGoodsUserCo;
+import codewifi.repository.third.ThirdVhanHotCache;
+import codewifi.repository.third.ThirdVhanImgCache;
 import codewifi.repository.third.ThirdVhanStarCache;
 import codewifi.repository.third.ThirdVhanWorkCache;
+import codewifi.request.very.VerystatusGoodsMoreRequest;
 import codewifi.request.very.VerystatusPayGoodsRequest;
 import codewifi.sdk.sdkVhan.response.HoroscopeSdkResponse;
 import codewifi.service.VerystatusThirdService;
@@ -15,6 +19,7 @@ import lombok.AllArgsConstructor;
 import org.jooq.tools.StringUtils;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Objects;
 
 @Service
@@ -28,6 +33,8 @@ public class VerystatusThirdServiceImpl implements VerystatusThirdService {
 
     private final ThirdVhanStarCache thirdVhanStarCache;
     private final ThirdVhanWorkCache thirdVhanWorkCache;
+    private final ThirdVhanHotCache thirdVhanHotCache;
+    private final ThirdVhanImgCache thirdVhanImgCache;
 
     @Override
     public boolean getThirdContent(VerystatusGoodsUserCo verystatusGoodsUserCo, VerystatusPayGoodsRequest verystatusPayGoodsRequest) {
@@ -55,6 +62,38 @@ public class VerystatusThirdServiceImpl implements VerystatusThirdService {
         if (verystatusGoodsUserCo.getGoodsSku().equals(VerystatusGoodsEnum.WORK_QING_HUA.getGoodsSku())){
             return workQingHua(verystatusGoodsUserCo);
         }
+        if (verystatusGoodsUserCo.getGoodsSku().equals(VerystatusGoodsEnum.HOT_HU_PU.getGoodsSku())){
+            return hotAll(verystatusGoodsUserCo);
+        }
+        if (verystatusGoodsUserCo.getGoodsSku().equals(VerystatusGoodsEnum.HOT_ZHI_HU.getGoodsSku())){
+            return hotAll(verystatusGoodsUserCo);
+        }
+        if (verystatusGoodsUserCo.getGoodsSku().equals(VerystatusGoodsEnum.HOT_KE_36.getGoodsSku())){
+            return hotAll(verystatusGoodsUserCo);
+        }
+        if (verystatusGoodsUserCo.getGoodsSku().equals(VerystatusGoodsEnum.HOT_BAI_DU.getGoodsSku())){
+            return hotAll(verystatusGoodsUserCo);
+        }
+        if (verystatusGoodsUserCo.getGoodsSku().equals(VerystatusGoodsEnum.HOT_BI_LI.getGoodsSku())){
+            return hotAll(verystatusGoodsUserCo);
+        }
+        if (verystatusGoodsUserCo.getGoodsSku().equals(VerystatusGoodsEnum.HOT_TIE_BA.getGoodsSku())){
+            return hotAll(verystatusGoodsUserCo);
+        }
+        if (verystatusGoodsUserCo.getGoodsSku().equals(VerystatusGoodsEnum.HOT_WEI_BO.getGoodsSku())){
+            return hotAll(verystatusGoodsUserCo);
+        }
+        if (verystatusGoodsUserCo.getGoodsSku().equals(VerystatusGoodsEnum.HOT_DOU_YIN.getGoodsSku())){
+            return hotAll(verystatusGoodsUserCo);
+        }
+        if ((verystatusGoodsUserCo.getGoodsSku() >= VerystatusGoodsEnum.IMG_DONG_MAN.getGoodsSku()) &&
+                (verystatusGoodsUserCo.getGoodsSku() <= VerystatusGoodsEnum.IMG_HEAD_JW.getGoodsSku())
+        ){
+            return imgAll(verystatusGoodsUserCo);
+        }
+        if (VerystatusGoodsEnum.HISTORY_TO_DAY.getGoodsSku().equals(verystatusGoodsUserCo.getGoodsSku())){
+            return historyAll(verystatusGoodsUserCo);
+        }
 
         return false;
     }
@@ -64,6 +103,38 @@ public class VerystatusThirdServiceImpl implements VerystatusThirdService {
         if (verystatusGoodsUserCo.getGoodsSku().equals(VerystatusGoodsEnum.STAR_TODAY.getGoodsSku())){
             starContent(HoroscopeEnum.TODAY,verystatusGoodsUserCo,verystatusPayGoodsRequest);
         }
+    }
+
+    @Override
+    public Object thirdPage(VerystatusGoodsMoreRequest verystatusGoodsMoreRequest) {
+        if (VerystatusGoodsEnum.HOT_HU_PU.getGoodsSku().equals(verystatusGoodsMoreRequest.getGoodsSku())){
+            return hotAllPage(verystatusGoodsMoreRequest);
+        }
+        if (VerystatusGoodsEnum.HOT_ZHI_HU.getGoodsSku().equals(verystatusGoodsMoreRequest.getGoodsSku())){
+            return hotAllPage(verystatusGoodsMoreRequest);
+        }
+        if (VerystatusGoodsEnum.HOT_KE_36.getGoodsSku().equals(verystatusGoodsMoreRequest.getGoodsSku())){
+            return hotAllPage(verystatusGoodsMoreRequest);
+        }
+        if (VerystatusGoodsEnum.HOT_BAI_DU.getGoodsSku().equals(verystatusGoodsMoreRequest.getGoodsSku())){
+            return hotAllPage(verystatusGoodsMoreRequest);
+        }
+        if (VerystatusGoodsEnum.HOT_BI_LI.getGoodsSku().equals(verystatusGoodsMoreRequest.getGoodsSku())){
+            return hotAllPage(verystatusGoodsMoreRequest);
+        }
+        if (VerystatusGoodsEnum.HOT_TIE_BA.getGoodsSku().equals(verystatusGoodsMoreRequest.getGoodsSku())){
+            return hotAllPage(verystatusGoodsMoreRequest);
+        }
+        if (VerystatusGoodsEnum.HOT_WEI_BO.getGoodsSku().equals(verystatusGoodsMoreRequest.getGoodsSku())){
+            return hotAllPage(verystatusGoodsMoreRequest);
+        }
+        if (VerystatusGoodsEnum.HOT_DOU_YIN.getGoodsSku().equals(verystatusGoodsMoreRequest.getGoodsSku())){
+            return hotAllPage(verystatusGoodsMoreRequest);
+        }
+        if (VerystatusGoodsEnum.HISTORY_TO_DAY.getGoodsSku().equals(verystatusGoodsMoreRequest.getGoodsSku())){
+            return historyAllPage(verystatusGoodsMoreRequest);
+        }
+        return null;
     }
 
     public boolean starContent(HoroscopeEnum timeHoroscopeEnum,VerystatusGoodsUserCo verystatusGoodsUserCo,VerystatusPayGoodsRequest verystatusPayGoodsRequest){
@@ -99,6 +170,49 @@ public class VerystatusThirdServiceImpl implements VerystatusThirdService {
         return true;
     }
 
+    public boolean hotAll(VerystatusGoodsUserCo verystatusGoodsUserCo){
+        List<ThirdVhanHotCo> content = thirdVhanHotCache.getStarHotList(verystatusGoodsUserCo.getGoodsSku());
+        if (Objects.isNull(content) || content.isEmpty()){
+            return false;
+        }
+        verystatusGoodsUserCo.setOther(content);
+        return true;
+    }
+
+    public Object hotAllPage(VerystatusGoodsMoreRequest verystatusGoodsMoreRequest){
+        List<ThirdVhanHotCo> content = thirdVhanHotCache.getByPage(verystatusGoodsMoreRequest.getGoodsSku(), verystatusGoodsMoreRequest.getPage());
+        if (Objects.isNull(content) || content.isEmpty()){
+            return false;
+        }
+        return content;
+    }
+
+    public boolean historyAll(VerystatusGoodsUserCo verystatusGoodsUserCo){
+        List<ThirdVhanHotCo> content = thirdVhanHotCache.getHistoryStart();
+        if (Objects.isNull(content) || content.isEmpty()){
+            return false;
+        }
+        verystatusGoodsUserCo.setOther(content);
+        return true;
+    }
+
+    public Object historyAllPage(VerystatusGoodsMoreRequest verystatusGoodsMoreRequest){
+        List<ThirdVhanHotCo> content = thirdVhanHotCache.getByHistoryPage(verystatusGoodsMoreRequest.getPage());
+        if (Objects.isNull(content) || content.isEmpty()){
+            return false;
+        }
+        return content;
+    }
+
+    public boolean imgAll(VerystatusGoodsUserCo verystatusGoodsUserCo) {
+        String imageHttp = thirdVhanImgCache.getBySku(verystatusGoodsUserCo.getGoodsSku());
+        if (Objects.isNull(imageHttp)){
+            return false;
+        }
+        verystatusGoodsUserCo.setContentImg(imageHttp);
+        return true;
+    }
 
 
-}
+
+    }

@@ -22,8 +22,6 @@ public class ThirdVhanWorkCache {
     private static final String V1 = "very";
     private static final String V2 = "ThirdVhanWorkService";
 
-    private static final Long saoHuaRate = 0L; //使用数据库的概率
-    private static final Long qingHuaRate = 0L; //使用数据库的概率
     private static final Long addRate = 1L;
     private static final BigDecimal allBig = BigDecimal.valueOf(10000);
 

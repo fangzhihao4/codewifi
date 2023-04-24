@@ -13,4 +13,5 @@ public interface UserLoginCommonService {
     String setVerystatusTokenByUserInfo(LoginTypeEnums loginTypeEnums, VerystatusUserModel verystatusUserModel);
 
     VerystatusUserModel getVerystatusUserModelByToken(String token);
+
 }

@@ -2,7 +2,6 @@ package codewifi.repository.third;
 
 import codewifi.common.RedissonService;
 import codewifi.common.constant.RedisKeyConstants;
-import codewifi.response.wifi.StarResponse;
 import codewifi.sdk.sdkVhan.HoroscopeSdkService;
 import codewifi.sdk.sdkVhan.response.HoroscopeSdkResponse;
 import codewifi.utils.LogUtil;
