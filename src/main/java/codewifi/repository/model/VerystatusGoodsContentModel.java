@@ -8,6 +8,7 @@ import java.time.LocalDate;
 public class VerystatusGoodsContentModel {
     Integer id;
     Integer goodsSku;
+    String goodsNo;
     String content;
     LocalDate createDate;
 }

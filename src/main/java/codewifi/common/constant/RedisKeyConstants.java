@@ -93,6 +93,7 @@ public class RedisKeyConstants {
 
 	public static final String VERY_STATUS_WORK_SAO_HUA_RATE = VERY_STATUS + "third:work:sao:hua:rate"; //骚话查询数据库概率
 	public static final String VERY_STATUS_WORK_QING_HUA_RATE = VERY_STATUS + "third:work:qing:hua:rate"; //情话话查询数据库概率
+	public static final String VERY_STATUS_WORK_JOKE_RATE = VERY_STATUS + "third:work:joke:rate"; //笑话话查询数据库概率
 
 	public static final String VERY_STATUS_IMG_DONG_MAN_RATE = VERY_STATUS + "third:img:dong:man:rate"; //动漫二次元图片
 	public static final String VERY_STATUS_IMG_TAO_GIRL_RATE = VERY_STATUS + "third:img:tao:girl:rate"; //淘宝卖家秀
@@ -103,6 +104,11 @@ public class RedisKeyConstants {
 	public static final String VERY_STATUS_IMG_HEAD_NV_RATE = VERY_STATUS + "third:img:head:nv:rate"; //随机头像女
 	public static final String VERY_STATUS_IMG_HEAD_DM_RATE = VERY_STATUS + "third:img:head:dm:rate"; //随机头像动漫
 	public static final String VERY_STATUS_IMG_HEAD_JW_RATE = VERY_STATUS + "third:img:head:jw:rate"; //随机头像景物
+
+
+	public static final String VERY_STATUS_CALENDAR_MO_YU_RATE = VERY_STATUS + "third:calendar:mo:yu:rate"; //摸鱼人日历
+	public static final String VERY_STATUS_CALENDAR_ZHI_CHANG_RATE = VERY_STATUS + "third:calendar:zhi:chang:rate"; //职场人日历
+
 
 
 

@@ -17,6 +17,8 @@ public class SdkVhanImageService {
     public static final String headNv = "https://api.vvhan.com/api/avatar?type=nv";
     public static final String headDm = "https://api.vvhan.com/api/avatar?type=dm";
     public static final String headJw = "https://api.vvhan.com/api/avatar?type=jw";
+    public static final String moYu = "https://api.vvhan.com/api/moyu";
+    public static final String zhiChang = "https://api.vvhan.com/api/zhichang";
     public String getTaoImage(){
         try {
             return resHttpImg(taoImg);
@@ -84,6 +86,22 @@ public class SdkVhanImageService {
     public String getDongMan(){
         try {
             return resHttpImg(dongMan);
+        }catch (Exception e){
+            return null;
+        }
+    }
+
+    public String getMoYu(){
+        try {
+            return resHttpImg(moYu);
+        }catch (Exception e){
+            return null;
+        }
+    }
+
+    public String getZhiChang(){
+        try {
+            return resHttpImg(zhiChang);
         }catch (Exception e){
             return null;
         }

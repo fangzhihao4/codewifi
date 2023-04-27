@@ -5,6 +5,7 @@ import codewifi.common.constant.RedisKeyConstants;
 import codewifi.repository.mapper.VerystatusGoodsContentMapper;
 import codewifi.repository.model.VerystatusGoodsContentModel;
 import codewifi.sdk.sdkVhan.SdkVhanWorkService;
+import codewifi.sdk.sdkVhan.response.SaoApiSdkResponse;
 import codewifi.utils.LogUtil;
 import lombok.AllArgsConstructor;
 import org.jooq.tools.StringUtils;
@@ -84,6 +85,46 @@ public class ThirdVhanWorkCache {
                 verystatusGoodsContentMapper.insertInfo(dbInfo);
                 return message;
             }
+        }
+        //查询数据库
+        VerystatusGoodsContentModel info = verystatusGoodsContentMapper.getInfo(goodsSku);
+        return info.getContent();
+    }
+
+
+    public String getJoke(Integer goodsSku) {
+        int randoms = BigDecimal.valueOf(Math.random()).multiply(allBig).intValue(); //随机的数值
+        RAtomicLong rAtomicLong = redissonService.getAtomicLong(RedisKeyConstants.VERY_STATUS_WORK_JOKE_RATE);
+        long rate = rAtomicLong.get();
+
+        //随机到的概率 大于查询数据库的概率 查询接口
+        if (randoms > rate) {
+            SaoApiSdkResponse message = sdkVhanWorkService.getJoke();
+            //查询到值了
+            if(Objects.nonNull(message)
+                    && Objects.nonNull(message.getId())
+                    && Objects.nonNull(message.getTitle())
+                    && Objects.nonNull(message.getJoke())
+            ){
+
+                VerystatusGoodsContentModel dbInfo = verystatusGoodsContentMapper.getInfoByContent(goodsSku, message.getId());
+                rAtomicLong.addAndGet(addRate);
+
+                //数据库有这条数据 增加查询数据库的概率
+                if (Objects.nonNull(dbInfo)) {
+                    return dbInfo.getContent();
+                }
+                //数据库没有这条数据 新增到数据库 概率不变化
+                dbInfo = new VerystatusGoodsContentModel();
+                String content = "标题: " + message.getTitle()
+                        + "\n内容: " + message.getJoke();
+                dbInfo.setContent(content);
+                dbInfo.setGoodsSku(goodsSku);
+                dbInfo.setGoodsNo(message.getId());
+                verystatusGoodsContentMapper.insertInfo(dbInfo);
+                return content;
+            }
+
         }
         //查询数据库
         VerystatusGoodsContentModel info = verystatusGoodsContentMapper.getInfo(goodsSku);

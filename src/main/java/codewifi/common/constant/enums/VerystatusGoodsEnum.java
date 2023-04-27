@@ -21,6 +21,7 @@ public enum VerystatusGoodsEnum {
     //随机一言
     WORK_SAO_HUA        (1101, 4, 5,BigDecimal.valueOf(2),  1,  999, 1,"骚话"),
     WORK_QING_HUA       (1102, 4, 5,BigDecimal.valueOf(2),  1,  999, 1,"情话"),
+    WORK_JOKE           (1103, 4, 5,BigDecimal.valueOf(2),  1,  999, 1,"笑话"),
 
     //热榜热搜
     HOT_HU_PU           (1301, 4, 5,BigDecimal.valueOf(2),  1,  999, 1,"虎扑热榜"),

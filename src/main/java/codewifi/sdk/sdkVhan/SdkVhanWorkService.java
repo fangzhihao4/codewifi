@@ -23,6 +23,7 @@ public class SdkVhanWorkService {
 
     private static final String url = "https://api.uomg.com/api/rand.qinghua?format=json";
     private static final String sqoHuaUrl = "https://api.vvhan.com/api/sao?type=json";
+    private static final String jokeUrl = "https://api.vvhan.com/api/joke?type=json";
 
     public QinghuaApiSdkResponse getQinghua() {
         String v3 = "getQinghua";
@@ -93,5 +94,26 @@ public class SdkVhanWorkService {
             return null;
         }
         return saoApiResponse.getIshan();
+    }
+
+    public SaoApiSdkResponse getJoke() {
+        String v3 = "getJoke";
+        String response;
+        try {
+            response = HttpClientUtil.post(sqoHuaUrl, "{}");
+        }
+        catch (Exception e) {
+            logUtil.infoError(LogConstant.V1, v2, v3, "笑话出错", url, ExceptionUtils.getStackTrace(e));
+            return null;
+        }
+        SaoApiSdkResponse saoApiResponse;
+        try {
+            saoApiResponse = jsonUtil.fromJsonString(response, SaoApiSdkResponse.class);
+        }
+        catch (Exception e) {
+            logUtil.infoError(LogConstant.V1, v2, v3, "查询笑话对象失败", null, response);
+            return null;
+        }
+        return saoApiResponse;
     }
 }

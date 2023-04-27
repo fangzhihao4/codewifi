@@ -320,6 +320,7 @@ public class VerystatusGoodsUserServiceImpl implements VerystatusGoodsUserServic
         verystatusGoodsUserInfoResponse.setShowType(verystatusGoodsUserCo.getShowType());
         verystatusGoodsUserInfoResponse.setContent(verystatusGoodsUserCo.getContent());
         verystatusGoodsUserInfoResponse.setContentImg(verystatusGoodsUserCo.getContentImg());
+        verystatusGoodsUserInfoResponse.setOther(verystatusGoodsUserCo.getOther());
         return verystatusGoodsUserInfoResponse;
     }
 

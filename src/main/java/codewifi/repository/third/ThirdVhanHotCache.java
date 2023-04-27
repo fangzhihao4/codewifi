@@ -219,7 +219,7 @@ public class ThirdVhanHotCache {
             return new ArrayList<>();
         }
         rMap.putAll(inMap);
-        long time = ChronoUnit.SECONDS.between(LocalDateTime.now(),LocalDate.now().atStartOfDay());
+        long time = ChronoUnit.SECONDS.between(LocalDate.now().atStartOfDay(),LocalDateTime.now());
         rMap.expireAsync(time, TimeUnit.SECONDS);
         return listHuPu;
     }

@@ -4,16 +4,22 @@ import codewifi.common.RedissonService;
 import codewifi.common.constant.RedisKeyConstants;
 import codewifi.common.constant.enums.VerystatusGoodsEnum;
 import codewifi.repository.mapper.VerystatusGoodsContentMapper;
+import codewifi.repository.model.UserInviteProfitModel;
 import codewifi.repository.model.VerystatusGoodsContentModel;
 import codewifi.sdk.sdkVhan.SdkVhanImageService;
 import codewifi.utils.LogUtil;
 import lombok.AllArgsConstructor;
 import org.jooq.tools.StringUtils;
 import org.redisson.api.RAtomicLong;
+import org.redisson.api.RBucket;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 
 @Service
 @AllArgsConstructor
@@ -121,5 +127,39 @@ public class ThirdVhanImgCache {
         }
         return  null;
     }
+
+    public  String getCalendar(Integer goodsSku){
+        if (VerystatusGoodsEnum.CALENDAR_MO_YU.getGoodsSku().equals(goodsSku)){
+            RBucket<String> bucket = redissonService.getBucket(RedisKeyConstants.VERY_STATUS_CALENDAR_MO_YU_RATE, String.class);
+            String content = bucket.get();
+            if (Objects.nonNull(content)){
+                return content;
+            }
+            String imgUrl = sdkVhanImageService.getMoYu();
+            if (Objects.isNull(imgUrl)){
+                return null;
+            }
+            long time = ChronoUnit.SECONDS.between(LocalDate.now().atStartOfDay(), LocalDateTime.now());
+            bucket.set(imgUrl,time, TimeUnit.SECONDS);
+            return imgUrl;
+        }
+
+        if (VerystatusGoodsEnum.CALENDAR_ZHI_CHANG.getGoodsSku().equals(goodsSku)){
+            RBucket<String> bucket = redissonService.getBucket(RedisKeyConstants.VERY_STATUS_CALENDAR_ZHI_CHANG_RATE, String.class);
+            String content = bucket.get();
+            if (Objects.nonNull(content)){
+                return content;
+            }
+            String imgUrl = sdkVhanImageService.getZhiChang();
+            if (Objects.isNull(imgUrl)){
+                return null;
+            }
+            long time = ChronoUnit.SECONDS.between(LocalDate.now().atStartOfDay(), LocalDateTime.now());
+            bucket.set(imgUrl,time, TimeUnit.SECONDS);
+            return imgUrl;
+        }
+        return null;
+    }
+
 
 }

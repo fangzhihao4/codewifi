@@ -11,4 +11,10 @@ public class SaoApiSdkResponse {
      Integer code;
 
      String ishan;
+
+     String id;
+
+     String title;
+
+     String joke;
 }

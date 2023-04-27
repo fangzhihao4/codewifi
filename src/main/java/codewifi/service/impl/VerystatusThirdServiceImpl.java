@@ -62,6 +62,9 @@ public class VerystatusThirdServiceImpl implements VerystatusThirdService {
         if (verystatusGoodsUserCo.getGoodsSku().equals(VerystatusGoodsEnum.WORK_QING_HUA.getGoodsSku())){
             return workQingHua(verystatusGoodsUserCo);
         }
+        if (verystatusGoodsUserCo.getGoodsSku().equals(VerystatusGoodsEnum.WORK_JOKE.getGoodsSku())){
+            return workJoke(verystatusGoodsUserCo);
+        }
         if (verystatusGoodsUserCo.getGoodsSku().equals(VerystatusGoodsEnum.HOT_HU_PU.getGoodsSku())){
             return hotAll(verystatusGoodsUserCo);
         }
@@ -94,15 +97,22 @@ public class VerystatusThirdServiceImpl implements VerystatusThirdService {
         if (VerystatusGoodsEnum.HISTORY_TO_DAY.getGoodsSku().equals(verystatusGoodsUserCo.getGoodsSku())){
             return historyAll(verystatusGoodsUserCo);
         }
+        if (VerystatusGoodsEnum.CALENDAR_MO_YU.getGoodsSku().equals(verystatusGoodsUserCo.getGoodsSku())){
+            return calendar(verystatusGoodsUserCo);
+        }
+        if (VerystatusGoodsEnum.CALENDAR_ZHI_CHANG.getGoodsSku().equals(verystatusGoodsUserCo.getGoodsSku())){
+            return calendar(verystatusGoodsUserCo);
+        }
 
         return false;
     }
 
     @Override
     public void startGoodsInfo(VerystatusGoodsUserCo verystatusGoodsUserCo, VerystatusPayGoodsRequest verystatusPayGoodsRequest) {
-        if (verystatusGoodsUserCo.getGoodsSku().equals(VerystatusGoodsEnum.STAR_TODAY.getGoodsSku())){
-            starContent(HoroscopeEnum.TODAY,verystatusGoodsUserCo,verystatusPayGoodsRequest);
-        }
+        getThirdContent(verystatusGoodsUserCo,verystatusPayGoodsRequest);
+        //        if (verystatusGoodsUserCo.getGoodsSku().equals(VerystatusGoodsEnum.STAR_TODAY.getGoodsSku())){
+//            starContent(HoroscopeEnum.TODAY,verystatusGoodsUserCo,verystatusPayGoodsRequest);
+//        }
     }
 
     @Override
@@ -170,6 +180,15 @@ public class VerystatusThirdServiceImpl implements VerystatusThirdService {
         return true;
     }
 
+    public boolean workJoke(VerystatusGoodsUserCo verystatusGoodsUserCo){
+        String content = thirdVhanWorkCache.getJoke(verystatusGoodsUserCo.getGoodsSku());
+        if (StringUtils.isEmpty(content)){
+            return false;
+        }
+        verystatusGoodsUserCo.setContent(content);
+        return true;
+    }
+
     public boolean hotAll(VerystatusGoodsUserCo verystatusGoodsUserCo){
         List<ThirdVhanHotCo> content = thirdVhanHotCache.getStarHotList(verystatusGoodsUserCo.getGoodsSku());
         if (Objects.isNull(content) || content.isEmpty()){
@@ -214,5 +233,14 @@ public class VerystatusThirdServiceImpl implements VerystatusThirdService {
     }
 
 
-
+    public boolean calendar(VerystatusGoodsUserCo verystatusGoodsUserCo) {
+        String imageHttp = thirdVhanImgCache.getCalendar(verystatusGoodsUserCo.getGoodsSku());
+        if (Objects.isNull(imageHttp)){
+            return false;
+        }
+        verystatusGoodsUserCo.setContentImg(imageHttp);
+        return true;
     }
+
+
+}

@@ -9,7 +9,6 @@ import codewifi.response.very.VerystatusGoodsMoreResponse;
 import codewifi.response.very.VerystatusGoodsUserInfoResponse;
 import codewifi.service.UserLoginCommonService;
 import codewifi.service.VerystatusGoodsUserService;
-import codewifi.utils.FileUtil;
 import codewifi.utils.LogUtil;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,12 +16,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -73,16 +69,4 @@ public class VerystatusGoodsController {
         return Response.data(verystatusGoodsMoreResponse);
     }
 
-    @RequestMapping("/image")
-    public Response<Object> image(@ProRequestBody @Valid VerystatusGoodsMoreRequest verystatusGoodsMoreRequest, @Token String token) throws IOException {
-        String imageUrl = "https://api.vvhan.com/api/tao";
-//        String imageUrl = "https://api.vvhan.com/api/tao";
-        URL url = new URL(imageUrl);
-        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-        connection.setInstanceFollowRedirects(false);
-        connection.connect();
-        String imageUrlFinal = connection.getHeaderField("location");
-        System.out.println(imageUrlFinal);
-        return Response.data(imageUrlFinal);
-    }
 }
