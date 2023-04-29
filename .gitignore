@@ -34,6 +34,8 @@ build/
 /caches
 /native
 build.gradle
+daemon
+.gradle/
 
 ### VS Code ###
 .vscode/

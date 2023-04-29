@@ -63,8 +63,8 @@ public class LoginServiceImpl implements LoginService {
     private final String appId = "wx83a48cee270a3de9";
     private final String appSecret = "26deaa40cb1bd4d0c928ddef4f4a5a21";
 
-    private final String very_status_appId = "";
-    private final String very_status_appSecret = "";
+    private final String very_status_appId = "wxf0dda273a342bda7";
+    private final String very_status_appSecret = "5fad85edc3057a07191c390f2fa4ce83";
 
     @Override
     public UserLoginResponse pwdLogin(UserLoginRequest request) {
@@ -132,13 +132,11 @@ public class LoginServiceImpl implements LoginService {
             throw new ReturnException(ReturnEnum.TOKEN_CODE_ERROR);
         }
 
-//        WechatJsCode2SessionResponse wechatJsCode2SessionResponse = wxApiService.snsJsCode2Session(code, very_status_appId, very_status_appSecret);
-//        if (Objects.isNull(wechatJsCode2SessionResponse) || StringUtils.isEmpty(wechatJsCode2SessionResponse.getOpenid())) {
-//            logUtil.infoBug(V1, V2, v3, "wx登录返回空数据", code, wechatJsCode2SessionResponse);
-//            throw new ReturnException(ReturnEnum.WX_LOGIN_FAIL);
-//        }
-        WechatJsCode2SessionResponse wechatJsCode2SessionResponse = new WechatJsCode2SessionResponse();
-        wechatJsCode2SessionResponse.setOpenid("openid");
+        WechatJsCode2SessionResponse wechatJsCode2SessionResponse = wxApiService.snsJsCode2Session(code, very_status_appId, very_status_appSecret);
+        if (Objects.isNull(wechatJsCode2SessionResponse) || StringUtils.isEmpty(wechatJsCode2SessionResponse.getOpenid())) {
+            logUtil.infoBug(V1, V2, v3, "wx登录返回空数据", code, wechatJsCode2SessionResponse);
+            throw new ReturnException(ReturnEnum.WX_LOGIN_FAIL);
+        }
         VerystatusUserLoginResponse verystatusUserLoginResponse = new VerystatusUserLoginResponse();
         verystatusUserLoginResponse.setIsFirst(VerystatusConstants.no_first_register_user);
         VerystatusUserModel verystatusUserModel = userLoginCache.getVerystatusUserByOpenId(wechatJsCode2SessionResponse.getOpenid());

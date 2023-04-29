@@ -4,7 +4,6 @@ import codewifi.repository.model.UserWifiCountModel;
 import lombok.AllArgsConstructor;
 import org.jooq.Condition;
 import org.jooq.DSLContext;
-import org.jooq.generated.tables.UserCreateWifi;
 import org.jooq.generated.tables.UserWifiCount;
 import org.springframework.stereotype.Repository;
 
