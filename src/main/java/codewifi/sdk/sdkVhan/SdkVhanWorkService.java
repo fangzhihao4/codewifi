@@ -97,13 +97,13 @@ public class SdkVhanWorkService {
     }
 
     public SaoApiSdkResponse getJoke() {
-        String v3 = "getJoke";
+        String v3 = "jokeUrl";
         String response;
         try {
-            response = HttpClientUtil.post(sqoHuaUrl, "{}");
+            response = HttpClientUtil.post(jokeUrl, "{}");
         }
         catch (Exception e) {
-            logUtil.infoError(LogConstant.V1, v2, v3, "笑话出错", url, ExceptionUtils.getStackTrace(e));
+            logUtil.infoError(LogConstant.V1, v2, v3, "笑话出错", jokeUrl, ExceptionUtils.getStackTrace(e));
             return null;
         }
         SaoApiSdkResponse saoApiResponse;

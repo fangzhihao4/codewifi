@@ -117,6 +117,7 @@ public class RedisKeyConstants {
 	public static final String VERY_STATUS_LOCK_USER_GOODS_DAY_START = VERY_LOCK + "user:goods:day:start"; //商品每天第一次更新
 	public static final String VERY_STATUS_LOCK_USER_WALLET = VERY_LOCK + "user:wallet:change:";//金币钱包增减锁
 	public static final String VERY_STATUS_LOCK_USER_INFO_UPDATE = VERY_LOCK + "user:info:update:"; //用户信息更新
+	public static final String VERY_STATUS_LOCK_USER_ADVISE_UPDATE = VERY_LOCK + "user:advise:add:"; //用户建议
 
 
 

@@ -13,14 +13,16 @@ import codewifi.repository.cache.UserLoginCache;
 import codewifi.repository.cache.UserProfitCache;
 import codewifi.repository.cache.VerystatusUserWalletCache;
 import codewifi.repository.mapper.UserMapper;
+import codewifi.repository.mapper.VerystatusAdviseMapper;
 import codewifi.repository.mapper.VerystatusUserMapper;
-import codewifi.repository.mapper.VerystatusUserWalletMapper;
 import codewifi.repository.model.UserModel;
+import codewifi.repository.model.VerystatusAdviseModel;
 import codewifi.repository.model.VerystatusUserModel;
 import codewifi.repository.model.VerystatusUserWalletModel;
 import codewifi.request.user.UserLoginRequest;
 import codewifi.request.user.WxUserHeadUpRequest;
 import codewifi.request.user.WxUserNicknameUpRequest;
+import codewifi.request.very.VerystatusAdviseRequest;
 import codewifi.response.user.UserLoginResponse;
 import codewifi.response.user.VerystatusUserLoginResponse;
 import codewifi.sdk.wxApi.WxApiService;
@@ -55,6 +57,7 @@ public class LoginServiceImpl implements LoginService {
     private final UserProfitCache userProfitCache;
     private final RedissonService redissonService;
     private final VerystatusUserWalletCache verystatusUserWalletCache;
+    private final VerystatusAdviseMapper verystatusAdviseMapper;
 
 
     private final String appId = "wx83a48cee270a3de9";
@@ -231,6 +234,38 @@ public class LoginServiceImpl implements LoginService {
         }
         catch (Exception e) {
             logUtil.infoBug(V1, V2, v3, "昵称更新异常", wxUserNicknameUpRequest, null);
+            throw new ReturnException(ReturnEnum.USER_NICKNAME_UP_ERROR);
+        }
+        finally {
+            if (rLock.isLocked())
+                rLock.unlock();
+        }
+    }
+
+    @Override
+    public void addAdvise(VerystatusUserModel userModel, VerystatusAdviseRequest request) {
+        String v3 = "wxVerystatusUpNickname";
+        RLock rLock = redissonService.getLock(RedisKeyConstants.VERY_STATUS_LOCK_USER_ADVISE_UPDATE + userModel.getUserNo());
+        try {
+            if (!rLock.tryLock(0, 10, TimeUnit.SECONDS)){
+                logUtil.infoBug(V1, V2, v3, "用户意见信息更新锁在进行中", request, null);
+                throw new ReturnException(ReturnEnum.USER_INFO_UP_ING);
+            }
+        }catch (InterruptedException ignored) {
+            logUtil.infoBug(V1, V2, v3, "用户意见更新锁异常", request, null);
+            throw new ReturnException(ReturnEnum.USER_NICKNAME_LOCK_UP_ERROR);
+        }
+        // 执行业务
+        try {
+            VerystatusAdviseModel verystatusAdviseModel = new VerystatusAdviseModel();
+            verystatusAdviseModel.setTitle(request.getTitle());
+            verystatusAdviseModel.setContent(request.getContent());
+            verystatusAdviseModel.setAnswer("");
+            verystatusAdviseModel.setUserNo(userModel.getUserNo());
+            verystatusAdviseMapper.addAdvise(verystatusAdviseModel);
+        }
+        catch (Exception e) {
+            logUtil.infoBug(V1, V2, v3, "用户意见更新异常", request, null);
             throw new ReturnException(ReturnEnum.USER_NICKNAME_UP_ERROR);
         }
         finally {

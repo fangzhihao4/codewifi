@@ -8,6 +8,7 @@ import codewifi.repository.model.VerystatusUserModel;
 import codewifi.request.user.WxLoginCodeRequest;
 import codewifi.request.user.WxUserHeadUpRequest;
 import codewifi.request.user.WxUserNicknameUpRequest;
+import codewifi.request.very.VerystatusAdviseRequest;
 import codewifi.response.user.VerystatusUserLoginResponse;
 import codewifi.service.LoginService;
 import codewifi.service.UserLoginCommonService;
@@ -54,6 +55,17 @@ public class VerystatusUserController {
         logUtil.info(V1, V2, v3, "请求日志", request, null);
         VerystatusUserModel verystatusUserModel = userLoginCommonService.getVerystatusUserModelByToken(token);
         loginService.wxVerystatusUpNickname(token, verystatusUserModel, request);
+        logUtil.info(V1, V2, v3, "返回日志", request, request);
+        return Response.data(ReturnEnum.SUCCESS);
+    }
+
+
+    @RequestMapping("/advise")
+    public Response<ReturnEnum> advise(@Valid @ProRequestBody VerystatusAdviseRequest request, @Token String token) {
+        String v3 = "upNickname";
+        logUtil.info(V1, V2, v3, "请求日志", request, null);
+        VerystatusUserModel verystatusUserModel = userLoginCommonService.getVerystatusUserModelByToken(token);
+        loginService.addAdvise(verystatusUserModel,request);
         logUtil.info(V1, V2, v3, "返回日志", request, request);
         return Response.data(ReturnEnum.SUCCESS);
     }
