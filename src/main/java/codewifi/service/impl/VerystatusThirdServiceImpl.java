@@ -12,6 +12,7 @@ import codewifi.repository.third.ThirdVhanStarCache;
 import codewifi.repository.third.ThirdVhanWorkCache;
 import codewifi.request.very.VerystatusGoodsMoreRequest;
 import codewifi.request.very.VerystatusPayGoodsRequest;
+import codewifi.sdk.openai.OpenaiService;
 import codewifi.sdk.sdkVhan.response.HoroscopeSdkResponse;
 import codewifi.service.VerystatusThirdService;
 import codewifi.utils.LogUtil;
@@ -19,6 +20,7 @@ import lombok.AllArgsConstructor;
 import org.jooq.tools.StringUtils;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -35,6 +37,7 @@ public class VerystatusThirdServiceImpl implements VerystatusThirdService {
     private final ThirdVhanWorkCache thirdVhanWorkCache;
     private final ThirdVhanHotCache thirdVhanHotCache;
     private final ThirdVhanImgCache thirdVhanImgCache;
+    private final OpenaiService openaiService;
 
     @Override
     public boolean getThirdContent(VerystatusGoodsUserCo verystatusGoodsUserCo, VerystatusPayGoodsRequest verystatusPayGoodsRequest) {
@@ -104,12 +107,18 @@ public class VerystatusThirdServiceImpl implements VerystatusThirdService {
             return calendar(verystatusGoodsUserCo);
         }
 
+        if ((verystatusGoodsUserCo.getGoodsSku() >= VerystatusGoodsEnum.OPENAI_USER_NAME.getGoodsSku()) &&
+                (verystatusGoodsUserCo.getGoodsSku() <= VerystatusGoodsEnum.OPENAI_MAX.getGoodsSku())
+        ){
+            return openai(verystatusGoodsUserCo,verystatusPayGoodsRequest);
+        }
+
         return false;
     }
 
     @Override
-    public void startGoodsInfo(VerystatusGoodsUserCo verystatusGoodsUserCo, VerystatusPayGoodsRequest verystatusPayGoodsRequest) {
-        getThirdContent(verystatusGoodsUserCo,verystatusPayGoodsRequest);
+    public boolean startGoodsInfo(VerystatusGoodsUserCo verystatusGoodsUserCo, VerystatusPayGoodsRequest verystatusPayGoodsRequest) {
+      return getThirdContent(verystatusGoodsUserCo,verystatusPayGoodsRequest);
         //        if (verystatusGoodsUserCo.getGoodsSku().equals(VerystatusGoodsEnum.STAR_TODAY.getGoodsSku())){
 //            starContent(HoroscopeEnum.TODAY,verystatusGoodsUserCo,verystatusPayGoodsRequest);
 //        }
@@ -216,8 +225,8 @@ public class VerystatusThirdServiceImpl implements VerystatusThirdService {
     }
 
     public Object historyAllPage(VerystatusGoodsMoreRequest verystatusGoodsMoreRequest){
-        List<ThirdVhanHotCo> content = thirdVhanHotCache.getByHistoryPage(verystatusGoodsMoreRequest.getPage());
-        if (Objects.isNull(content) || content.isEmpty()){
+        ThirdVhanHotCo content = thirdVhanHotCache.getByHistoryPage(verystatusGoodsMoreRequest.getPage());
+        if (Objects.isNull(content)){
             return false;
         }
         return content;
@@ -242,5 +251,25 @@ public class VerystatusThirdServiceImpl implements VerystatusThirdService {
         return true;
     }
 
+    public boolean openai(VerystatusGoodsUserCo verystatusGoodsUserCo,VerystatusPayGoodsRequest verystatusPayGoodsRequest){
+        if (VerystatusGoodsEnum.OPENAI_USER_NAME.getGoodsSku().equals(verystatusGoodsUserCo.getGoodsSku())){
+            String content = openaiService.getByName(verystatusGoodsUserCo,verystatusPayGoodsRequest);
+            if (StringUtils.isEmpty(content)){
+                return false;
+            }
+            verystatusGoodsUserCo.setContent(content);
+            return true;
+        }
+        List<Integer> reportList = Arrays.asList(VerystatusGoodsEnum.OPENAI_REPORT_DAY.getGoodsSku(),VerystatusGoodsEnum.OPENAI_REPORT_WEEK.getGoodsSku(),VerystatusGoodsEnum.OPENAI_REPORT_ALL.getGoodsSku());
+        if (reportList.contains(verystatusGoodsUserCo.getGoodsSku())){
+            String content = openaiService.getReport(verystatusGoodsUserCo,verystatusPayGoodsRequest);
+            if (StringUtils.isEmpty(content)){
+                return false;
+            }
+            verystatusGoodsUserCo.setContent(content);
+            return true;
+        }
+        return false;
+    }
 
 }

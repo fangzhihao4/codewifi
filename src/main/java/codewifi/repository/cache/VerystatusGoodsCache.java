@@ -7,6 +7,7 @@ import codewifi.repository.mapper.VerystatusGoodsMapper;
 import codewifi.repository.model.VerystatusGoodsModel;
 import codewifi.utils.JsonUtil;
 import lombok.AllArgsConstructor;
+import org.redisson.api.RAtomicLong;
 import org.redisson.api.RBucket;
 import org.springframework.stereotype.Service;
 
@@ -43,5 +44,10 @@ public class VerystatusGoodsCache {
         }
         bucket.set(verystatusGoodsModel,RedisKeyConstants.EXPIRE_BY_ONE_HOUR, TimeUnit.SECONDS);
         return verystatusGoodsModel;
+    }
+
+    public void addGetTime(Integer goodSku){
+        RAtomicLong rAtomicLong = redissonService.getAtomicLong(RedisKeyConstants.VERY_STATUS_SYSTEM_GOODS_COUNT + goodSku);
+        rAtomicLong.getAndAdd(1);
     }
 }

@@ -48,31 +48,22 @@ public class ThirdVhanHotCache {
     }
 
     public List<ThirdVhanHotCo> getHistoryStart(){
+//        return getByHistory();
         List<ThirdVhanHotCo> list = getByHistory();
-        int startPage = 0;
-        int endPage = Math.min(11,list.size());
+        for (ThirdVhanHotCo thirdVhanHotCo : list){
+            thirdVhanHotCo.setDesc("");
+        }
+//        int startPage = 0;
+//        int endPage = Math.min(11,list.size());
         return list.stream()
                 .sorted(Comparator.comparingInt(ThirdVhanHotCo::getIndex))
-                .filter( s -> (s.getIndex() > startPage) && ( s.getIndex()<endPage))
+//                .filter( s -> (s.getIndex() > startPage) && ( s.getIndex()<endPage))
                 .collect(Collectors.toList());
     }
 
-    public List<ThirdVhanHotCo> getByHistoryPage(Integer page) {
+    public ThirdVhanHotCo getByHistoryPage(Integer page) {
         List<ThirdVhanHotCo> list = getByHistory();
-        int size = list.size();
-        if (size <= 0) {
-            return new ArrayList<>();
-        }
-        int startPage = Math.min(page * 10, size);
-        int endPage = Math.min(startPage + 11, size);
-        List<ThirdVhanHotCo> subList = list.stream()
-                .sorted(Comparator.comparingInt(ThirdVhanHotCo::getIndex))
-                .filter( s -> (s.getIndex() > startPage) && ( s.getIndex()<endPage))
-                .collect(Collectors.toList());
-        for (ThirdVhanHotCo thirdVhanHotCo : subList){
-            thirdVhanHotCo.setDesc("");
-        }
-        return subList;
+        return list.stream().filter(s -> s.getIndex().equals(page)).findFirst().orElse(null);
     }
 
 

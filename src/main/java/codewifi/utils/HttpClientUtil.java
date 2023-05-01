@@ -58,6 +58,7 @@ public class HttpClientUtil {
             uc.setRequestProperty("User-Agent", "Mozilla/4.0 (compatible; MSIE 5.0; Windows NT; DigExt)");
             uc.setRequestProperty("Content-Type", "application/json;charset=" + charset);
             uc.setRequestProperty("accept", "*/*");
+//            uc.setRequestProperty("Authorization","Bearer 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");
             uc.setDoOutput(true);
             uc.setDoInput(true);
             uc.setRequestMethod(POST);

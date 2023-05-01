@@ -3,7 +3,9 @@ package codewifi.service.impl;
 import codewifi.annotation.exception.ReturnException;
 import codewifi.common.constant.ReturnEnum;
 import codewifi.common.constant.enums.VerystatusCoinSourceEnum;
+import codewifi.common.constant.enums.VerystatusGoodsEnum;
 import codewifi.repository.cache.VerystatusCoinOrderCache;
+import codewifi.repository.cache.VerystatusGoodsCache;
 import codewifi.repository.cache.VerystatusGoodsUserCache;
 import codewifi.repository.cache.VerystatusUserWalletCache;
 import codewifi.repository.co.VerystatusGoodsUserCo;
@@ -42,6 +44,7 @@ public class VerystatusGoodsUserServiceImpl implements VerystatusGoodsUserServic
     private final VerystatusGoodsUserMapper verystatusGoodsUserMapper;
     private final VerystatusCoinOrderCache verystatusCoinOrderCache;
     private final VerystatusThirdService verystatusThirdService;
+    private final VerystatusGoodsCache verystatusGoodsCache;
 
 
     /**
@@ -59,7 +62,16 @@ public class VerystatusGoodsUserServiceImpl implements VerystatusGoodsUserServic
             logUtil.infoWarn(V1,V2,v3,"找不到这个商品", verystatusPayGoodsRequest, userModel.getUserNo());
             throw new ReturnException(ReturnEnum.NO_FUND_THIS_GOODS);
         }
-        verystatusThirdService.startGoodsInfo(verystatusGoodsUserCo,verystatusPayGoodsRequest);
+        boolean res =  verystatusThirdService.startGoodsInfo(verystatusGoodsUserCo,verystatusPayGoodsRequest);
+        if (res){
+            VerystatusCoinOrderModel verystatusCoinOrderModel = new VerystatusCoinOrderModel();
+            verystatusCoinOrderModel.setUserNo(userModel.getUserNo());
+            verystatusCoinOrderModel.setOldCoin(BigDecimal.valueOf(0));
+            verystatusCoinOrderModel.setNewCoin(BigDecimal.valueOf(0));
+            verystatusCoinOrderModel.setChangeType(VerystatusCoinOrderMapper.FREE);
+            verystatusGoodsCache.addGetTime(verystatusGoodsUserCo.getGoodsSku());
+            addOrder(userModel,verystatusGoodsUserCo,verystatusCoinOrderModel);
+        }
         return getResByCo(verystatusGoodsUserCo);
     }
 
@@ -130,7 +142,13 @@ public class VerystatusGoodsUserServiceImpl implements VerystatusGoodsUserServic
             logUtil.infoWarn(V1,V2,v3,"金币不足", verystatusGoodsUserCo.getGoodsSku(), userModel.getUserNo());
             throw new ReturnException(ReturnEnum.USER_COIN_LESS);
         }
-        boolean getInfoRes = getGoodsContent(verystatusGoodsUserCo, verystatusPayGoodsRequest);
+        VerystatusCoinOrderModel verystatusCoinOrderModel = new VerystatusCoinOrderModel();
+        verystatusCoinOrderModel.setUserNo(userWallet.getUserNo());
+        verystatusCoinOrderModel.setOldCoin(userWallet.getCoin());
+        verystatusCoinOrderModel.setNewCoin(userWallet.getCoin().subtract(verystatusGoodsUserCo.getCoin()));
+        verystatusCoinOrderModel.setChangeType(VerystatusCoinOrderMapper.COIN_SUB);
+
+        boolean getInfoRes = getGoodsContent(userModel,verystatusCoinOrderModel,verystatusGoodsUserCo, verystatusPayGoodsRequest);
         if (!getInfoRes){
             logUtil.infoWarn(V1,V2,v3,"查询相关信息失败", verystatusGoodsUserCo.getGoodsSku(), userModel.getUserNo());
             throw new ReturnException(ReturnEnum.GET_GOODS_CONTENT_FALSE);
@@ -138,13 +156,6 @@ public class VerystatusGoodsUserServiceImpl implements VerystatusGoodsUserServic
         verystatusUserWalletCache.changeUserCoin(false, userModel.getUserNo(), verystatusGoodsUserCo.getCoin());
 
         finishUserGoods(userModel,verystatusGoodsUserCo,VerystatusGoodsMapper.price_coin);
-
-        VerystatusCoinOrderModel verystatusCoinOrderModel = new VerystatusCoinOrderModel();
-        verystatusCoinOrderModel.setUserNo(userWallet.getUserNo());
-        verystatusCoinOrderModel.setOldCoin(userWallet.getCoin());
-        verystatusCoinOrderModel.setNewCoin(userWallet.getCoin().subtract(verystatusGoodsUserCo.getCoin()));
-        verystatusCoinOrderModel.setChangeType(VerystatusCoinOrderMapper.COIN_SUB);
-        addOrder(userModel,verystatusGoodsUserCo,verystatusCoinOrderModel);
 
         VerystatusGoodsUserInfoResponse verystatusGoodsUserInfoResponse = getResByCo(verystatusGoodsUserCo);
         verystatusGoodsUserInfoResponse.setContentImg(verystatusGoodsUserCo.getContentImg());
@@ -162,17 +173,18 @@ public class VerystatusGoodsUserServiceImpl implements VerystatusGoodsUserServic
      */
     public VerystatusGoodsUserInfoResponse getByFree(VerystatusUserModel userModel,VerystatusPayGoodsRequest verystatusPayGoodsRequest,VerystatusGoodsUserCo verystatusGoodsUserCo){
         String v3 = "getByFree";
-        boolean getInfoRes = getGoodsContent(verystatusGoodsUserCo,verystatusPayGoodsRequest);
+        VerystatusGoodsUserModel verystatusGoodsUserModel = finishUserGoods(userModel,verystatusGoodsUserCo,VerystatusGoodsMapper.price_free);
+        VerystatusCoinOrderModel verystatusCoinOrderModel = new VerystatusCoinOrderModel();
+        verystatusCoinOrderModel.setUserNo(userModel.getUserNo());
+        verystatusCoinOrderModel.setChangeType(VerystatusCoinOrderMapper.FREE);
+
+        boolean getInfoRes = getGoodsContent(userModel, verystatusCoinOrderModel,verystatusGoodsUserCo,verystatusPayGoodsRequest);
         if (!getInfoRes){
             logUtil.infoWarn(V1,V2,v3,"查询相关信息失败", verystatusGoodsUserCo.getGoodsSku(), userModel.getUserNo());
             throw new ReturnException(ReturnEnum.GET_GOODS_CONTENT_FALSE);
         }
         //永久免费
         if (VerystatusGoodsMapper.price_free.equals(verystatusGoodsUserCo.getPriceType())){
-            VerystatusCoinOrderModel verystatusCoinOrderModel = new VerystatusCoinOrderModel();
-            verystatusCoinOrderModel.setChangeType(VerystatusCoinOrderMapper.FREE);
-            addOrder(userModel,verystatusGoodsUserCo,verystatusCoinOrderModel);
-
             VerystatusGoodsUserInfoResponse verystatusGoodsUserInfoResponse = getResByCo(verystatusGoodsUserCo);
             verystatusGoodsUserInfoResponse.setContentImg(verystatusGoodsUserCo.getContentImg());
             verystatusGoodsUserInfoResponse.setContent(verystatusGoodsUserCo.getContent());
@@ -188,12 +200,6 @@ public class VerystatusGoodsUserServiceImpl implements VerystatusGoodsUserServic
         }
 
         //最新用户商品数据
-        VerystatusGoodsUserModel verystatusGoodsUserModel = finishUserGoods(userModel,verystatusGoodsUserCo,VerystatusGoodsMapper.price_free);
-        VerystatusCoinOrderModel verystatusCoinOrderModel = new VerystatusCoinOrderModel();
-        verystatusCoinOrderModel.setUserNo(userModel.getUserNo());
-        verystatusCoinOrderModel.setChangeType(VerystatusCoinOrderMapper.FREE);
-        addOrder(userModel,verystatusGoodsUserCo,verystatusCoinOrderModel);
-
         VerystatusGoodsUserInfoResponse verystatusGoodsUserInfoResponse = getResByCo(verystatusGoodsUserCo);
         verystatusGoodsUserInfoResponse.setFreeUseNum(verystatusGoodsUserModel.getFreeUseNum());
         verystatusGoodsUserInfoResponse.setIsFinish(verystatusGoodsUserModel.getIsFinish());
@@ -215,7 +221,9 @@ public class VerystatusGoodsUserServiceImpl implements VerystatusGoodsUserServic
         VerystatusGoodsUserInfoResponse verystatusGoodsUserInfoResponse = getResByCo(verystatusGoodsUserCo);
         //完成
         if ( (verystatusGoodsUserCo.getVideoFinish() + 1) >= verystatusGoodsUserCo.getVideoNeed()){
-            boolean getInfoRes = getGoodsContent(verystatusGoodsUserCo,verystatusPayGoodsRequest);
+            verystatusCoinOrderModel.setChangeType(VerystatusCoinOrderMapper.VIDEO_FINISH);
+
+            boolean getInfoRes = getGoodsContent(userModel,verystatusCoinOrderModel,verystatusGoodsUserCo,verystatusPayGoodsRequest);
             if (!getInfoRes){
                 logUtil.infoWarn(V1,V2,v3,"查询相关信息失败", verystatusGoodsUserCo.getGoodsSku(), userModel.getUserNo());
                 throw new ReturnException(ReturnEnum.GET_GOODS_CONTENT_FALSE);
@@ -225,14 +233,11 @@ public class VerystatusGoodsUserServiceImpl implements VerystatusGoodsUserServic
             verystatusGoodsUserInfoResponse.setIsFinish(verystatusGoodsUserModel.getIsFinish());
             verystatusGoodsUserInfoResponse.setContentImg(verystatusGoodsUserCo.getContentImg());
             verystatusGoodsUserInfoResponse.setContent(verystatusGoodsUserCo.getContent());
-            verystatusCoinOrderModel.setChangeType(VerystatusCoinOrderMapper.VIDEO_FINISH);
 
         }else{
             verystatusCoinOrderModel.setChangeType(VerystatusCoinOrderMapper.VIDEO);
             verystatusGoodsUserCache.addUserVideo(userModel.getUserNo(),verystatusGoodsUserCo.getGoodsSku(),LocalDate.now());
         }
-
-        addOrder(userModel,verystatusGoodsUserCo,verystatusCoinOrderModel);
 
         verystatusGoodsUserInfoResponse.setVideFinish(verystatusGoodsUserCo.getVideoFinish()+1);
         return verystatusGoodsUserInfoResponse;
@@ -275,7 +280,7 @@ public class VerystatusGoodsUserServiceImpl implements VerystatusGoodsUserServic
      * @param verystatusCoinOrderModel 订单信息
      */
     public void addOrder(VerystatusUserModel userModel, VerystatusGoodsUserCo verystatusGoodsUserCo,VerystatusCoinOrderModel verystatusCoinOrderModel){
-        VerystatusCoinSourceEnum verystatusCoinSourceEnum = VerystatusCoinSourceEnum.getGoodsEnum(verystatusGoodsUserCo.getGoodsSku());
+        VerystatusGoodsEnum verystatusGoodsEnum = VerystatusGoodsEnum.getGoodsEnum(verystatusGoodsUserCo.getGoodsSku());
         VerystatusCoinOrderInfoModel verystatusCoinOrderInfoModel = new VerystatusCoinOrderInfoModel();
 
         if (Objects.isNull(verystatusCoinOrderModel.getOldCoin())){
@@ -286,12 +291,12 @@ public class VerystatusGoodsUserServiceImpl implements VerystatusGoodsUserServic
         }
         verystatusCoinOrderModel.setUserNo(userModel.getUserNo());
         verystatusCoinOrderModel.setUseCoin(verystatusGoodsUserCo.getCoin());
-        verystatusCoinOrderModel.setSource(verystatusCoinSourceEnum.getSource());
-        verystatusCoinOrderModel.setDescription(verystatusCoinSourceEnum.getName());
+        verystatusCoinOrderModel.setSource(1);
+        verystatusCoinOrderModel.setDescription(Objects.nonNull(verystatusGoodsEnum) ? verystatusGoodsEnum.getName() : "");
 
         verystatusCoinOrderInfoModel.setUserNo(userModel.getUserNo());
-        verystatusCoinOrderInfoModel.setSource(verystatusCoinSourceEnum.getSource());
-        verystatusCoinOrderInfoModel.setTitle(verystatusCoinSourceEnum.getName());
+        verystatusCoinOrderInfoModel.setSource(1);
+        verystatusCoinOrderInfoModel.setTitle(Objects.nonNull(verystatusGoodsEnum) ? verystatusGoodsEnum.getName() : "");
         verystatusCoinOrderInfoModel.setChangeType(verystatusCoinOrderModel.getChangeType());
         verystatusCoinOrderInfoModel.setShowType(verystatusGoodsUserCo.getShowType());
         verystatusCoinOrderInfoModel.setContentImg(verystatusGoodsUserCo.getContentImg());
@@ -324,8 +329,13 @@ public class VerystatusGoodsUserServiceImpl implements VerystatusGoodsUserServic
         return verystatusGoodsUserInfoResponse;
     }
 
-    public boolean getGoodsContent(VerystatusGoodsUserCo verystatusGoodsUserCo, VerystatusPayGoodsRequest verystatusPayGoodsRequest){
-        return verystatusThirdService.getThirdContent(verystatusGoodsUserCo,verystatusPayGoodsRequest);
+    public boolean getGoodsContent(VerystatusUserModel userModel, VerystatusCoinOrderModel verystatusCoinOrderModel,VerystatusGoodsUserCo verystatusGoodsUserCo, VerystatusPayGoodsRequest verystatusPayGoodsRequest){
+        boolean res =  verystatusThirdService.getThirdContent(verystatusGoodsUserCo,verystatusPayGoodsRequest);
+        if (res){
+            verystatusGoodsCache.addGetTime(verystatusGoodsUserCo.getGoodsSku());
+            addOrder(userModel,verystatusGoodsUserCo,verystatusCoinOrderModel);
+        }
+        return res;
     }
 
 

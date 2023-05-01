@@ -73,13 +73,15 @@ public class RedisKeyConstants {
 
 	public static final String VERY_STATUS = "very:";
 	public static final String VERY_STATUS_SYSTEM_MENU = VERY_STATUS + "system:menu"; //系统菜单
-	public static final String VERY_STATUS_SYSTEM_GOODS = VERY_STATUS + "system:goods:"; //系统商品
+	public static final String VERY_STATUS_SYSTEM_GOODS = VERY_STATUS + "system:goods:info:"; //系统商品
+	public static final String VERY_STATUS_SYSTEM_GOODS_COUNT = VERY_STATUS + "system:goods:count:"; //系统商品统计
 
 	public static final String VERY_STATUS_USER_TOKEN = VERY_STATUS + "user:token:" ; //用户token
 
 	public static final String VERY_STATUS_USER_WALLET = VERY_STATUS + "user:wallet:info:" ;//用户钱包
 	public static final String VERY_STATUS_USER_VIDEO = VERY_STATUS + "user:video:type:";//用户看视频
 	public static final String VERY_STATUS_USER_GOODS = VERY_STATUS + "user:goods:"; //用户商品信息
+
 	public static final String STAR_FORTUNE_STRING = VERY_STATUS + "third:star:all:"; //星座运势
 	public static final String VERY_STATUS_HOT_HU_PU_HASH = VERY_STATUS +  "third:hot:hupu:hash"; //热榜虎扑
 	public static final String VERY_STATUS_HOT_ZHI_HU_HASH = VERY_STATUS +  "third:hot:zhihu:hash"; //热榜知乎
@@ -118,6 +120,10 @@ public class RedisKeyConstants {
 	public static final String VERY_STATUS_LOCK_USER_WALLET = VERY_LOCK + "user:wallet:change:";//金币钱包增减锁
 	public static final String VERY_STATUS_LOCK_USER_INFO_UPDATE = VERY_LOCK + "user:info:update:"; //用户信息更新
 	public static final String VERY_STATUS_LOCK_USER_ADVISE_UPDATE = VERY_LOCK + "user:advise:add:"; //用户建议
+	public static final String VERY_STATUS_LOCK_DB_PARTITION = VERY_LOCK + "user:db:partition"; //分区表
+
+
+
 
 
 
