@@ -2,7 +2,6 @@ package codewifi.service.impl;
 
 import codewifi.annotation.exception.ReturnException;
 import codewifi.common.constant.ReturnEnum;
-import codewifi.common.constant.enums.VerystatusCoinSourceEnum;
 import codewifi.common.constant.enums.VerystatusGoodsEnum;
 import codewifi.repository.cache.VerystatusCoinOrderCache;
 import codewifi.repository.cache.VerystatusGoodsCache;
@@ -173,7 +172,6 @@ public class VerystatusGoodsUserServiceImpl implements VerystatusGoodsUserServic
      */
     public VerystatusGoodsUserInfoResponse getByFree(VerystatusUserModel userModel,VerystatusPayGoodsRequest verystatusPayGoodsRequest,VerystatusGoodsUserCo verystatusGoodsUserCo){
         String v3 = "getByFree";
-        VerystatusGoodsUserModel verystatusGoodsUserModel = finishUserGoods(userModel,verystatusGoodsUserCo,VerystatusGoodsMapper.price_free);
         VerystatusCoinOrderModel verystatusCoinOrderModel = new VerystatusCoinOrderModel();
         verystatusCoinOrderModel.setUserNo(userModel.getUserNo());
         verystatusCoinOrderModel.setChangeType(VerystatusCoinOrderMapper.FREE);
@@ -185,6 +183,7 @@ public class VerystatusGoodsUserServiceImpl implements VerystatusGoodsUserServic
         }
         //永久免费
         if (VerystatusGoodsMapper.price_free.equals(verystatusGoodsUserCo.getPriceType())){
+            verystatusGoodsUserCo.setFreeUseNum(verystatusGoodsUserCo.getFreeUseNum() + 1);
             VerystatusGoodsUserInfoResponse verystatusGoodsUserInfoResponse = getResByCo(verystatusGoodsUserCo);
             verystatusGoodsUserInfoResponse.setContentImg(verystatusGoodsUserCo.getContentImg());
             verystatusGoodsUserInfoResponse.setContent(verystatusGoodsUserCo.getContent());
@@ -198,6 +197,7 @@ public class VerystatusGoodsUserServiceImpl implements VerystatusGoodsUserServic
             logUtil.infoWarn(V1,V2,v3,"免费次数达到上限", null, verystatusGoodsUserCo);
             throw new ReturnException(ReturnEnum.FREE_TIME_IS_MAX);
         }
+        VerystatusGoodsUserModel verystatusGoodsUserModel = finishUserGoods(userModel,verystatusGoodsUserCo,VerystatusGoodsMapper.price_free);
 
         //最新用户商品数据
         VerystatusGoodsUserInfoResponse verystatusGoodsUserInfoResponse = getResByCo(verystatusGoodsUserCo);

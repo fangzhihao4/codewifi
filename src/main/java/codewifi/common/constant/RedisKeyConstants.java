@@ -112,6 +112,9 @@ public class RedisKeyConstants {
 	public static final String VERY_STATUS_CALENDAR_ZHI_CHANG_RATE = VERY_STATUS + "third:calendar:zhi:chang:rate"; //职场人日历
 
 
+	public static final String VERY_WEATHER_CITY_RESPONSE = VERY_STATUS + "third:weather:city:by:name:"; //根据名字获得城市
+	public static final String VERY_WEATHER_WEATHER_RESPONSE = VERY_STATUS + "third:weather:weather:by:city:"; //根据城市id获取天气
+
 
 
 	public static final String VERY_LOCK = "very:lock:";

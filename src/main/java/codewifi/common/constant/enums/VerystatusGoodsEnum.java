@@ -52,12 +52,13 @@ public enum VerystatusGoodsEnum {
     CALENDAR_ZHI_CHANG  (1602, 4, 5,BigDecimal.valueOf(2),  1,  999, 1,"职场人日历"),
 
     //openai
-    OPENAI_USER_NAME    (1701, 4, 5,BigDecimal.valueOf(2),  1,  999, 1,"AI姓名解析"),
-    OPENAI_REPORT_DAY   (1702, 4, 5,BigDecimal.valueOf(2),  1,  999, 1,"AI日报生成"),
-    OPENAI_REPORT_WEEK  (1703, 4, 5,BigDecimal.valueOf(2),  1,  999, 1,"AI周报生成"),
-    OPENAI_REPORT_ALL   (1704, 4, 5,BigDecimal.valueOf(2),  1,  999, 1,"AI总结生成"),
+    OPENAI_USER_NAME    (1701, 3, 5,BigDecimal.valueOf(2),  1,  999, 1,"AI姓名解析"),
+    OPENAI_REPORT       (1702, 3, 10,BigDecimal.valueOf(2),  1,  999, 1,"AI日报生成"),
 
     OPENAI_MAX          (1799, 4, 5,BigDecimal.valueOf(2),  1,  999, 1,"默认不返回"),
+
+
+    WEATHER_CITY        (1801, 4, 5,BigDecimal.valueOf(2),  1,  999, 1,"默认不返回"),
 
 
 

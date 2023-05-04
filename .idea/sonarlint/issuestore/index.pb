@@ -68,8 +68,6 @@ c
 3src/main/java/codewifi/service/WifiInfoService.java,2/b/2b99a780a11c186fecdf2067ff2094ef8c912293
 i
 9src/main/java/codewifi/controller/LinkWifiController.java,5/8/58929d752e54a928231b1d6e0c9c83a299219175
-n
->src/main/java/codewifi/service/impl/UserProfitServiceImpl.java,a/1/a1fea276fcbc596b588dbdc4e24d79194402b0b8
 f
 6src/main/java/codewifi/repository/model/UserModel.java,0/a/0a1f4383b39d22cf1ab5e5904947d5a8ffb055c7
 v
@@ -128,8 +126,6 @@ d
 4src/main/java/codewifi/annotation/TokenResolver.java,5/6/562cf131aa18b492812fe71cb56f53011f93485b
 j
 :src/main/java/codewifi/service/VerystatusIndexService.java,a/5/a578d3f1c6059c940b8f995fe671a0a949b50cd4
-_
-/src/main/java/codewifi/utils/BeanCopyUtils.java,b/2/b2282af97eca4eeb528d46acf8ec3f9c0ae738ce
 v
 Fsrc/main/java/codewifi/repository/model/VerystatusMenuConfigModel.java,e/a/ea1d00cc9b1845e97c99504e0312f0adeae03df7
 x

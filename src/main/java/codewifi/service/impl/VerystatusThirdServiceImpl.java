@@ -5,15 +5,14 @@ import codewifi.common.constant.ReturnEnum;
 import codewifi.common.constant.enums.VerystatusGoodsEnum;
 import codewifi.common.constant.enums.thrid.HoroscopeEnum;
 import codewifi.repository.co.ThirdVhanHotCo;
+import codewifi.repository.co.ThirdWeatherCityCo;
 import codewifi.repository.co.VerystatusGoodsUserCo;
-import codewifi.repository.third.ThirdVhanHotCache;
-import codewifi.repository.third.ThirdVhanImgCache;
-import codewifi.repository.third.ThirdVhanStarCache;
-import codewifi.repository.third.ThirdVhanWorkCache;
+import codewifi.repository.third.*;
 import codewifi.request.very.VerystatusGoodsMoreRequest;
 import codewifi.request.very.VerystatusPayGoodsRequest;
 import codewifi.sdk.openai.OpenaiService;
 import codewifi.sdk.sdkVhan.response.HoroscopeSdkResponse;
+import codewifi.sdk.weather.response.WeatherResponse;
 import codewifi.service.VerystatusThirdService;
 import codewifi.utils.LogUtil;
 import lombok.AllArgsConstructor;
@@ -37,6 +36,7 @@ public class VerystatusThirdServiceImpl implements VerystatusThirdService {
     private final ThirdVhanWorkCache thirdVhanWorkCache;
     private final ThirdVhanHotCache thirdVhanHotCache;
     private final ThirdVhanImgCache thirdVhanImgCache;
+    private final ThirdWeatherCache thirdWeatherCache;
     private final OpenaiService openaiService;
 
     @Override
@@ -112,13 +112,22 @@ public class VerystatusThirdServiceImpl implements VerystatusThirdService {
         ){
             return openai(verystatusGoodsUserCo,verystatusPayGoodsRequest);
         }
+        if (VerystatusGoodsEnum.WEATHER_CITY.getGoodsSku().equals(verystatusGoodsUserCo.getGoodsSku())){
+            return weather(verystatusGoodsUserCo,verystatusPayGoodsRequest);
+        }
 
         return false;
     }
 
     @Override
     public boolean startGoodsInfo(VerystatusGoodsUserCo verystatusGoodsUserCo, VerystatusPayGoodsRequest verystatusPayGoodsRequest) {
-      return getThirdContent(verystatusGoodsUserCo,verystatusPayGoodsRequest);
+        if ((verystatusGoodsUserCo.getGoodsSku() >= VerystatusGoodsEnum.OPENAI_USER_NAME.getGoodsSku()) &&
+                (verystatusGoodsUserCo.getGoodsSku() <= VerystatusGoodsEnum.OPENAI_MAX.getGoodsSku())
+        ){
+            verystatusGoodsUserCo.setContent("");
+            return false;
+        }
+        return getThirdContent(verystatusGoodsUserCo,verystatusPayGoodsRequest);
         //        if (verystatusGoodsUserCo.getGoodsSku().equals(VerystatusGoodsEnum.STAR_TODAY.getGoodsSku())){
 //            starContent(HoroscopeEnum.TODAY,verystatusGoodsUserCo,verystatusPayGoodsRequest);
 //        }
@@ -252,6 +261,8 @@ public class VerystatusThirdServiceImpl implements VerystatusThirdService {
     }
 
     public boolean openai(VerystatusGoodsUserCo verystatusGoodsUserCo,VerystatusPayGoodsRequest verystatusPayGoodsRequest){
+//            verystatusGoodsUserCo.setContent("测试");
+//            return true;
         if (VerystatusGoodsEnum.OPENAI_USER_NAME.getGoodsSku().equals(verystatusGoodsUserCo.getGoodsSku())){
             String content = openaiService.getByName(verystatusGoodsUserCo,verystatusPayGoodsRequest);
             if (StringUtils.isEmpty(content)){
@@ -260,14 +271,31 @@ public class VerystatusThirdServiceImpl implements VerystatusThirdService {
             verystatusGoodsUserCo.setContent(content);
             return true;
         }
-        List<Integer> reportList = Arrays.asList(VerystatusGoodsEnum.OPENAI_REPORT_DAY.getGoodsSku(),VerystatusGoodsEnum.OPENAI_REPORT_WEEK.getGoodsSku(),VerystatusGoodsEnum.OPENAI_REPORT_ALL.getGoodsSku());
-        if (reportList.contains(verystatusGoodsUserCo.getGoodsSku())){
+       if (VerystatusGoodsEnum.OPENAI_REPORT.getGoodsSku().equals(verystatusGoodsUserCo.getGoodsSku())){
             String content = openaiService.getReport(verystatusGoodsUserCo,verystatusPayGoodsRequest);
             if (StringUtils.isEmpty(content)){
                 return false;
             }
             verystatusGoodsUserCo.setContent(content);
             return true;
+        }
+        return false;
+    }
+
+    public boolean weather(VerystatusGoodsUserCo verystatusGoodsUserCo,VerystatusPayGoodsRequest verystatusPayGoodsRequest){
+        if ("city".equalsIgnoreCase(verystatusPayGoodsRequest.getParamFirst())){
+            List<ThirdWeatherCityCo> cityCos = thirdWeatherCache.getByCityName(verystatusPayGoodsRequest.getParamTwo());
+            if (Objects.nonNull(cityCos) && !cityCos.isEmpty()){
+                verystatusGoodsUserCo.setOther(cityCos);
+                return true;
+            }
+        }
+        if ("weather".equalsIgnoreCase(verystatusPayGoodsRequest.getParamFirst())){
+            WeatherResponse weatherResponse = thirdWeatherCache.getByCityId(verystatusPayGoodsRequest.getParamTwo());
+            if (Objects.nonNull(weatherResponse)){
+                verystatusGoodsUserCo.setOther(weatherResponse);
+                return true;
+            }
         }
         return false;
     }

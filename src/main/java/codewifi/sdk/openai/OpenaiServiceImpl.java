@@ -4,7 +4,6 @@ import codewifi.common.constant.LogConstant;
 import codewifi.common.constant.enums.VerystatusGoodsEnum;
 import codewifi.repository.co.VerystatusGoodsUserCo;
 import codewifi.request.very.VerystatusPayGoodsRequest;
-import codewifi.utils.HttpClientUtil;
 import codewifi.utils.JsonUtil;
 import codewifi.utils.LogUtil;
 import codewifi.utils.RestTemplateUtil;
@@ -12,8 +11,6 @@ import lombok.AllArgsConstructor;
 import okhttp3.*;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
-import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
@@ -57,7 +54,7 @@ public class OpenaiServiceImpl implements OpenaiService {
                     .url("https://api.openai.com/v1/chat/completions")
                     .method("POST", body)
                     .addHeader("Content-Type", "application/json")
-                    .addHeader("Authorization", "Bearer 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")
+                    .addHeader("Authorization", "Bearer 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")
                     .build();
             Response responseData = client.newCall(request).execute();
             response = responseData.body().string();
@@ -99,13 +96,13 @@ public class OpenaiServiceImpl implements OpenaiService {
     @Override
     public String getReport(VerystatusGoodsUserCo verystatusGoodsUserCo, VerystatusPayGoodsRequest verystatusPayGoodsRequest) {
         String content = "";
-        if (VerystatusGoodsEnum.OPENAI_REPORT_DAY.getGoodsSku().equals(verystatusGoodsUserCo.getGoodsSku())){
+        if ("日报".equalsIgnoreCase(verystatusPayGoodsRequest.getParamTwo())){
             content = verystatusPayGoodsRequest.getParamFirst() + ", 根据以上内容生成日报";
         }
-        if (VerystatusGoodsEnum.OPENAI_REPORT_WEEK.getGoodsSku().equals(verystatusGoodsUserCo.getGoodsSku())){
+        if ("周报".equalsIgnoreCase(verystatusPayGoodsRequest.getParamTwo())){
             content = verystatusPayGoodsRequest.getParamFirst() + ", 根据以上内容生成周报";
         }
-        if (VerystatusGoodsEnum.OPENAI_REPORT_ALL.getGoodsSku().equals(verystatusGoodsUserCo.getGoodsSku())){
+        if ("总结".equalsIgnoreCase(verystatusPayGoodsRequest.getParamTwo())){
             content = verystatusPayGoodsRequest.getParamFirst() + ", 根据以上内容生成总结";
         }
         if (StringUtils.isBlank(content)){

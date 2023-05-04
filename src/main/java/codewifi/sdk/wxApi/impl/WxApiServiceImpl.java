@@ -10,7 +10,6 @@ import codewifi.utils.LogUtil;
 import codewifi.utils.RestTemplateUtil;
 import lombok.AllArgsConstructor;
 import org.redisson.api.RBucket;
-import org.redisson.misc.Hash;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
