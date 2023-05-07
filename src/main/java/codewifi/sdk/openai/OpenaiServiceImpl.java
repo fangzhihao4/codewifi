@@ -1,16 +1,17 @@
 package codewifi.sdk.openai;
 
+import codewifi.common.RedissonService;
 import codewifi.common.constant.LogConstant;
-import codewifi.common.constant.enums.VerystatusGoodsEnum;
+import codewifi.common.constant.RedisKeyConstants;
 import codewifi.repository.co.VerystatusGoodsUserCo;
 import codewifi.request.very.VerystatusPayGoodsRequest;
 import codewifi.utils.JsonUtil;
 import codewifi.utils.LogUtil;
-import codewifi.utils.RestTemplateUtil;
 import lombok.AllArgsConstructor;
 import okhttp3.*;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.redisson.api.RBucket;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
@@ -23,9 +24,21 @@ public class OpenaiServiceImpl implements OpenaiService {
     private final JsonUtil jsonUtil;
     private static final LogUtil logUtil = LogUtil.getLogger(OpenaiServiceImpl.class);
     private static final String v2 = "OpenAIServiceImpl";
-    private final RestTemplateUtil restTemplateUtil;
+    private final RedissonService redissonService;
 
     public static String URL = "https://api.openai.com/v1/chat/completions";
+
+    public String getOpenKey(){
+        String redisKey = RedisKeyConstants.VERY_STATUS_SYSTEM_OPEN_KEY;
+        RBucket<String> bucket = redissonService.getBucket(redisKey, String.class);
+        String key = bucket.get();
+        if (Objects.nonNull(key)){
+            return key;
+        }
+        key = "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";
+        bucket.set(key, RedisKeyConstants.EXPIRE_BY_MONTH_SECONDS, TimeUnit.SECONDS );
+        return key;
+    }
 
     public OpenaiRequest getRequest(String userContent){
         OpenaiRequest openAiRequest = new OpenaiRequest();
@@ -54,7 +67,7 @@ public class OpenaiServiceImpl implements OpenaiService {
                     .url("https://api.openai.com/v1/chat/completions")
                     .method("POST", body)
                     .addHeader("Content-Type", "application/json")
-                    .addHeader("Authorization", "Bearer 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")
+                    .addHeader("Authorization", "Bearer "+ getOpenKey())
                     .build();
             Response responseData = client.newCall(request).execute();
             response = responseData.body().string();

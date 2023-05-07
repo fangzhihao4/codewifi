@@ -75,6 +75,8 @@ public class RedisKeyConstants {
 	public static final String VERY_STATUS_SYSTEM_MENU = VERY_STATUS + "system:menu"; //系统菜单
 	public static final String VERY_STATUS_SYSTEM_GOODS = VERY_STATUS + "system:goods:info:"; //系统商品
 	public static final String VERY_STATUS_SYSTEM_GOODS_COUNT = VERY_STATUS + "system:goods:count:"; //系统商品统计
+	public static final String VERY_STATUS_SYSTEM_OPEN_KEY = VERY_STATUS + "system:goods:open:key"; //
+
 
 	public static final String VERY_STATUS_USER_TOKEN = VERY_STATUS + "user:token:" ; //用户token
 
