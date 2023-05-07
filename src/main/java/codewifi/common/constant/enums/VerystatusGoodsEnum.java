@@ -58,7 +58,11 @@ public enum VerystatusGoodsEnum {
     OPENAI_MAX          (1799, 4, 5,BigDecimal.valueOf(2),  1,  999, 1,"默认不返回"),
 
 
-    WEATHER_CITY        (1801, 4, 5,BigDecimal.valueOf(2),  1,  999, 1,"默认不返回"),
+    WEATHER_CITY        (1801, 4, 10,BigDecimal.valueOf(2),  1,  999, 1,"天气预报"),
+
+    LOT_COMMON          (1901, 4, 5,BigDecimal.valueOf(2),  1,  999, 1,"月老灵签"),
+    LOT_MAN             (1902, 4, 5,BigDecimal.valueOf(2),  1,  999, 1,"月老灵签姻缘签"),
+    LOT_MONEY           (1903, 4, 5,BigDecimal.valueOf(2),  1,  999, 1,"财神灵签"),
 
 
 

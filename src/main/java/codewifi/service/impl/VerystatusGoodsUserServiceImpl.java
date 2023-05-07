@@ -48,7 +48,8 @@ public class VerystatusGoodsUserServiceImpl implements VerystatusGoodsUserServic
 
     /**
      * 查询用户商品信息
-     * @param userModel 用户信息
+     *
+     * @param userModel                 用户信息
      * @param verystatusPayGoodsRequest 商品verystatusPayGoodsRequest
      * @return 商品信息
      */
@@ -57,26 +58,27 @@ public class VerystatusGoodsUserServiceImpl implements VerystatusGoodsUserServic
         String v3 = "getUserGoods";
         LocalDate today = LocalDate.now();
         VerystatusGoodsUserCo verystatusGoodsUserCo = verystatusGoodsUserCache.getUserGoods(userModel.getUserNo(), verystatusPayGoodsRequest.getGoodsSku(), today);
-        if (Objects.isNull(verystatusGoodsUserCo)){
-            logUtil.infoWarn(V1,V2,v3,"找不到这个商品", verystatusPayGoodsRequest, userModel.getUserNo());
+        if (Objects.isNull(verystatusGoodsUserCo)) {
+            logUtil.infoWarn(V1, V2, v3, "找不到这个商品", verystatusPayGoodsRequest, userModel.getUserNo());
             throw new ReturnException(ReturnEnum.NO_FUND_THIS_GOODS);
         }
-        boolean res =  verystatusThirdService.startGoodsInfo(verystatusGoodsUserCo,verystatusPayGoodsRequest);
-        if (res){
+        boolean res = verystatusThirdService.startGoodsInfo(verystatusGoodsUserCo, verystatusPayGoodsRequest, userModel.getUserNo());
+        if (res) {
             VerystatusCoinOrderModel verystatusCoinOrderModel = new VerystatusCoinOrderModel();
             verystatusCoinOrderModel.setUserNo(userModel.getUserNo());
             verystatusCoinOrderModel.setOldCoin(BigDecimal.valueOf(0));
             verystatusCoinOrderModel.setNewCoin(BigDecimal.valueOf(0));
             verystatusCoinOrderModel.setChangeType(VerystatusCoinOrderMapper.FREE);
             verystatusGoodsCache.addGetTime(verystatusGoodsUserCo.getGoodsSku());
-            addOrder(userModel,verystatusGoodsUserCo,verystatusCoinOrderModel);
+            addOrder(userModel, verystatusGoodsUserCo, verystatusCoinOrderModel);
         }
         return getResByCo(verystatusGoodsUserCo);
     }
 
     /**
      * 获取列表
-     * @param userModel 用户信息
+     *
+     * @param userModel                  用户信息
      * @param verystatusGoodsInfoRequest 请求商品信息
      * @return 结果
      */
@@ -84,11 +86,11 @@ public class VerystatusGoodsUserServiceImpl implements VerystatusGoodsUserServic
     public List<VerystatusGoodsUserInfoResponse> getUserGoodsList(VerystatusUserModel userModel, VerystatusGoodsInfoRequest verystatusGoodsInfoRequest) {
         LocalDate today = LocalDate.now();
         List<VerystatusGoodsUserCo> verystatusGoodsUserCoList = verystatusGoodsUserCache.getUserGoodsList(userModel.getUserNo(), verystatusGoodsInfoRequest.getGoodsList(), today);
-        if (Objects.isNull(verystatusGoodsUserCoList) || verystatusGoodsUserCoList.isEmpty()){
-            return  new ArrayList<>();
+        if (Objects.isNull(verystatusGoodsUserCoList) || verystatusGoodsUserCoList.isEmpty()) {
+            return new ArrayList<>();
         }
         List<VerystatusGoodsUserInfoResponse> responseList = new ArrayList<>();
-        for (VerystatusGoodsUserCo verystatusGoodsUserCo : verystatusGoodsUserCoList){
+        for (VerystatusGoodsUserCo verystatusGoodsUserCo : verystatusGoodsUserCoList) {
             responseList.add(getResByCo(verystatusGoodsUserCo));
         }
         return responseList;
@@ -97,7 +99,8 @@ public class VerystatusGoodsUserServiceImpl implements VerystatusGoodsUserServic
 
     /**
      * 商品支付
-     * @param userModel 用户信息
+     *
+     * @param userModel                 用户信息
      * @param verystatusPayGoodsRequest 支付类型
      * @return 支付结果
      */
@@ -107,38 +110,39 @@ public class VerystatusGoodsUserServiceImpl implements VerystatusGoodsUserServic
         String v3 = "getUserPayContent";
         LocalDate today = LocalDate.now();
         VerystatusGoodsUserCo verystatusGoodsUserCo = verystatusGoodsUserCache.getUserGoods(userModel.getUserNo(), verystatusPayGoodsRequest.getGoodsSku(), today);
-        if (Objects.isNull(verystatusGoodsUserCo)){
-            logUtil.infoWarn(V1,V2,v3,"找不到这个商品", verystatusPayGoodsRequest, userModel.getUserNo());
+        if (Objects.isNull(verystatusGoodsUserCo)) {
+            logUtil.infoWarn(V1, V2, v3, "找不到这个商品", verystatusPayGoodsRequest, userModel.getUserNo());
             throw new ReturnException(ReturnEnum.NO_FUND_THIS_GOODS);
         }
         //使用金币
-        if (VerystatusGoodsMapper.price_coin.equals(verystatusPayGoodsRequest.getPayType()) && VerystatusGoodsMapper.USE_COIN.contains(verystatusGoodsUserCo.getPriceType())){
-            return getByCoin(userModel,verystatusPayGoodsRequest,verystatusGoodsUserCo);
+        if (VerystatusGoodsMapper.price_coin.equals(verystatusPayGoodsRequest.getPayType()) && VerystatusGoodsMapper.USE_COIN.contains(verystatusGoodsUserCo.getPriceType())) {
+            return getByCoin(userModel, verystatusPayGoodsRequest, verystatusGoodsUserCo);
         }
         //使用免费
-        if (VerystatusGoodsMapper.price_free.equals(verystatusPayGoodsRequest.getPayType())){
-            return getByFree(userModel,verystatusPayGoodsRequest,verystatusGoodsUserCo);
+        if (VerystatusGoodsMapper.price_free.equals(verystatusPayGoodsRequest.getPayType())) {
+            return getByFree(userModel, verystatusPayGoodsRequest, verystatusGoodsUserCo);
         }
         //使用视频
-        if (VerystatusGoodsMapper.price_video.equals(verystatusPayGoodsRequest.getPayType()) && VerystatusGoodsMapper.USE_VIDEO.contains(verystatusGoodsUserCo.getPriceType())){
-            return getByVideo(userModel,verystatusPayGoodsRequest,verystatusGoodsUserCo);
+        if (VerystatusGoodsMapper.price_video.equals(verystatusPayGoodsRequest.getPayType()) && VerystatusGoodsMapper.USE_VIDEO.contains(verystatusGoodsUserCo.getPriceType())) {
+            return getByVideo(userModel, verystatusPayGoodsRequest, verystatusGoodsUserCo);
         }
-        logUtil.infoWarn(V1,V2,v3,"不支持的类型", verystatusGoodsUserCo.getGoodsSku(), verystatusGoodsUserCo);
+        logUtil.infoWarn(V1, V2, v3, "不支持的类型", verystatusGoodsUserCo.getGoodsSku(), verystatusGoodsUserCo);
         throw new ReturnException(ReturnEnum.NOT_USE_TYPE_GOODS);
     }
 
 
     /**
      * 金币支付
-     * @param userModel 用户信息
+     *
+     * @param userModel             用户信息
      * @param verystatusGoodsUserCo 个人商品信息
      * @return 支付结果
      */
-    public VerystatusGoodsUserInfoResponse getByCoin(VerystatusUserModel userModel, VerystatusPayGoodsRequest verystatusPayGoodsRequest, VerystatusGoodsUserCo verystatusGoodsUserCo){
+    public VerystatusGoodsUserInfoResponse getByCoin(VerystatusUserModel userModel, VerystatusPayGoodsRequest verystatusPayGoodsRequest, VerystatusGoodsUserCo verystatusGoodsUserCo) {
         String v3 = "getByCoin";
         VerystatusUserWalletModel userWallet = verystatusUserWalletCache.getUserWallet(userModel.getUserNo());
-        if (Objects.isNull(userWallet) || (userWallet.getCoin().compareTo(verystatusGoodsUserCo.getCoin()) < 0)){
-            logUtil.infoWarn(V1,V2,v3,"金币不足", verystatusGoodsUserCo.getGoodsSku(), userModel.getUserNo());
+        if (Objects.isNull(userWallet) || (userWallet.getCoin().compareTo(verystatusGoodsUserCo.getCoin()) < 0)) {
+            logUtil.infoWarn(V1, V2, v3, "金币不足", verystatusGoodsUserCo.getGoodsSku(), userModel.getUserNo());
             throw new ReturnException(ReturnEnum.USER_COIN_LESS);
         }
         VerystatusCoinOrderModel verystatusCoinOrderModel = new VerystatusCoinOrderModel();
@@ -147,14 +151,14 @@ public class VerystatusGoodsUserServiceImpl implements VerystatusGoodsUserServic
         verystatusCoinOrderModel.setNewCoin(userWallet.getCoin().subtract(verystatusGoodsUserCo.getCoin()));
         verystatusCoinOrderModel.setChangeType(VerystatusCoinOrderMapper.COIN_SUB);
 
-        boolean getInfoRes = getGoodsContent(userModel,verystatusCoinOrderModel,verystatusGoodsUserCo, verystatusPayGoodsRequest);
-        if (!getInfoRes){
-            logUtil.infoWarn(V1,V2,v3,"查询相关信息失败", verystatusGoodsUserCo.getGoodsSku(), userModel.getUserNo());
+        boolean getInfoRes = getGoodsContent(userModel, verystatusCoinOrderModel, verystatusGoodsUserCo, verystatusPayGoodsRequest);
+        if (!getInfoRes) {
+            logUtil.infoWarn(V1, V2, v3, "查询相关信息失败", verystatusGoodsUserCo.getGoodsSku(), userModel.getUserNo());
             throw new ReturnException(ReturnEnum.GET_GOODS_CONTENT_FALSE);
         }
         verystatusUserWalletCache.changeUserCoin(false, userModel.getUserNo(), verystatusGoodsUserCo.getCoin());
 
-        finishUserGoods(userModel,verystatusGoodsUserCo,VerystatusGoodsMapper.price_coin);
+        finishUserGoods(userModel, verystatusGoodsUserCo, VerystatusGoodsMapper.price_coin);
 
         VerystatusGoodsUserInfoResponse verystatusGoodsUserInfoResponse = getResByCo(verystatusGoodsUserCo);
         verystatusGoodsUserInfoResponse.setContentImg(verystatusGoodsUserCo.getContentImg());
@@ -166,38 +170,39 @@ public class VerystatusGoodsUserServiceImpl implements VerystatusGoodsUserServic
 
     /**
      * 免费使用
-     * @param userModel 用户信息
+     *
+     * @param userModel             用户信息
      * @param verystatusGoodsUserCo 用户商品信息
      * @return 支付结果
      */
-    public VerystatusGoodsUserInfoResponse getByFree(VerystatusUserModel userModel,VerystatusPayGoodsRequest verystatusPayGoodsRequest,VerystatusGoodsUserCo verystatusGoodsUserCo){
+    public VerystatusGoodsUserInfoResponse getByFree(VerystatusUserModel userModel, VerystatusPayGoodsRequest verystatusPayGoodsRequest, VerystatusGoodsUserCo verystatusGoodsUserCo) {
         String v3 = "getByFree";
         VerystatusCoinOrderModel verystatusCoinOrderModel = new VerystatusCoinOrderModel();
         verystatusCoinOrderModel.setUserNo(userModel.getUserNo());
         verystatusCoinOrderModel.setChangeType(VerystatusCoinOrderMapper.FREE);
 
-        boolean getInfoRes = getGoodsContent(userModel, verystatusCoinOrderModel,verystatusGoodsUserCo,verystatusPayGoodsRequest);
-        if (!getInfoRes){
-            logUtil.infoWarn(V1,V2,v3,"查询相关信息失败", verystatusGoodsUserCo.getGoodsSku(), userModel.getUserNo());
+        boolean getInfoRes = getGoodsContent(userModel, verystatusCoinOrderModel, verystatusGoodsUserCo, verystatusPayGoodsRequest);
+        if (!getInfoRes) {
+            logUtil.infoWarn(V1, V2, v3, "查询相关信息失败", verystatusGoodsUserCo.getGoodsSku(), userModel.getUserNo());
             throw new ReturnException(ReturnEnum.GET_GOODS_CONTENT_FALSE);
         }
         //永久免费
-        if (VerystatusGoodsMapper.price_free.equals(verystatusGoodsUserCo.getPriceType())){
+        if (VerystatusGoodsMapper.price_free.equals(verystatusGoodsUserCo.getPriceType())) {
             verystatusGoodsUserCo.setFreeUseNum(verystatusGoodsUserCo.getFreeUseNum() + 1);
             VerystatusGoodsUserInfoResponse verystatusGoodsUserInfoResponse = getResByCo(verystatusGoodsUserCo);
             verystatusGoodsUserInfoResponse.setContentImg(verystatusGoodsUserCo.getContentImg());
             verystatusGoodsUserInfoResponse.setContent(verystatusGoodsUserCo.getContent());
             verystatusGoodsUserInfoResponse.setOther(verystatusGoodsUserCo.getOther());
 
-            finishUserGoods(userModel,verystatusGoodsUserCo,VerystatusGoodsMapper.price_free);
+            finishUserGoods(userModel, verystatusGoodsUserCo, VerystatusGoodsMapper.price_free);
             return verystatusGoodsUserInfoResponse;
         }
 
-        if (verystatusGoodsUserCo.getFreeTotalNum() <= verystatusGoodsUserCo.getFreeUseNum()){
-            logUtil.infoWarn(V1,V2,v3,"免费次数达到上限", null, verystatusGoodsUserCo);
+        if (verystatusGoodsUserCo.getFreeTotalNum() <= verystatusGoodsUserCo.getFreeUseNum()) {
+            logUtil.infoWarn(V1, V2, v3, "免费次数达到上限", null, verystatusGoodsUserCo);
             throw new ReturnException(ReturnEnum.FREE_TIME_IS_MAX);
         }
-        VerystatusGoodsUserModel verystatusGoodsUserModel = finishUserGoods(userModel,verystatusGoodsUserCo,VerystatusGoodsMapper.price_free);
+        VerystatusGoodsUserModel verystatusGoodsUserModel = finishUserGoods(userModel, verystatusGoodsUserCo, VerystatusGoodsMapper.price_free);
 
         //最新用户商品数据
         VerystatusGoodsUserInfoResponse verystatusGoodsUserInfoResponse = getResByCo(verystatusGoodsUserCo);
@@ -211,52 +216,53 @@ public class VerystatusGoodsUserServiceImpl implements VerystatusGoodsUserServic
 
     /**
      * 视频支付
-     * @param userModel 用户信息
+     *
+     * @param userModel             用户信息
      * @param verystatusGoodsUserCo 用户商品信息
      * @return 支付结果
      */
-    public VerystatusGoodsUserInfoResponse getByVideo(VerystatusUserModel userModel,VerystatusPayGoodsRequest verystatusPayGoodsRequest,VerystatusGoodsUserCo verystatusGoodsUserCo){
+    public VerystatusGoodsUserInfoResponse getByVideo(VerystatusUserModel userModel, VerystatusPayGoodsRequest verystatusPayGoodsRequest, VerystatusGoodsUserCo verystatusGoodsUserCo) {
         String v3 = "getByVideo";
         VerystatusCoinOrderModel verystatusCoinOrderModel = new VerystatusCoinOrderModel();
         VerystatusGoodsUserInfoResponse verystatusGoodsUserInfoResponse = getResByCo(verystatusGoodsUserCo);
         //完成
-        if ( (verystatusGoodsUserCo.getVideoFinish() + 1) >= verystatusGoodsUserCo.getVideoNeed()){
+        if ((verystatusGoodsUserCo.getVideoFinish() + 1) >= verystatusGoodsUserCo.getVideoNeed()) {
             verystatusCoinOrderModel.setChangeType(VerystatusCoinOrderMapper.VIDEO_FINISH);
 
-            boolean getInfoRes = getGoodsContent(userModel,verystatusCoinOrderModel,verystatusGoodsUserCo,verystatusPayGoodsRequest);
-            if (!getInfoRes){
-                logUtil.infoWarn(V1,V2,v3,"查询相关信息失败", verystatusGoodsUserCo.getGoodsSku(), userModel.getUserNo());
+            boolean getInfoRes = getGoodsContent(userModel, verystatusCoinOrderModel, verystatusGoodsUserCo, verystatusPayGoodsRequest);
+            if (!getInfoRes) {
+                logUtil.infoWarn(V1, V2, v3, "查询相关信息失败", verystatusGoodsUserCo.getGoodsSku(), userModel.getUserNo());
                 throw new ReturnException(ReturnEnum.GET_GOODS_CONTENT_FALSE);
             }
-            VerystatusGoodsUserModel verystatusGoodsUserModel = finishUserGoods(userModel,verystatusGoodsUserCo, VerystatusCoinOrderMapper.VIDEO);
+            VerystatusGoodsUserModel verystatusGoodsUserModel = finishUserGoods(userModel, verystatusGoodsUserCo, VerystatusCoinOrderMapper.VIDEO);
             verystatusGoodsUserInfoResponse.setFreeUseNum(verystatusGoodsUserModel.getFreeUseNum());
             verystatusGoodsUserInfoResponse.setIsFinish(verystatusGoodsUserModel.getIsFinish());
             verystatusGoodsUserInfoResponse.setContentImg(verystatusGoodsUserCo.getContentImg());
             verystatusGoodsUserInfoResponse.setContent(verystatusGoodsUserCo.getContent());
 
-        }else{
+        } else {
             verystatusCoinOrderModel.setChangeType(VerystatusCoinOrderMapper.VIDEO);
-            verystatusGoodsUserCache.addUserVideo(userModel.getUserNo(),verystatusGoodsUserCo.getGoodsSku(),LocalDate.now());
+            verystatusGoodsUserCache.addUserVideo(userModel.getUserNo(), verystatusGoodsUserCo.getGoodsSku(), LocalDate.now());
         }
 
-        verystatusGoodsUserInfoResponse.setVideFinish(verystatusGoodsUserCo.getVideoFinish()+1);
+        verystatusGoodsUserInfoResponse.setVideFinish(verystatusGoodsUserCo.getVideoFinish() + 1);
         return verystatusGoodsUserInfoResponse;
     }
 
 
-
     /**
      * 完成后更新用户商品
-     * @param userModel  用户信息
+     *
+     * @param userModel             用户信息
      * @param verystatusGoodsUserCo 商品信息
-     * @param useType 更新类型
+     * @param useType               更新类型
      * @return 更新后的商品信息
      */
-    public VerystatusGoodsUserModel finishUserGoods(VerystatusUserModel userModel,VerystatusGoodsUserCo verystatusGoodsUserCo, int useType){
+    public VerystatusGoodsUserModel finishUserGoods(VerystatusUserModel userModel, VerystatusGoodsUserCo verystatusGoodsUserCo, int useType) {
         String v3 = "finishUserGoods";
-        VerystatusGoodsUserModel verystatusGoodsUserModel = verystatusGoodsUserMapper.getInfo(verystatusGoodsUserCo.getGoodsSku(),userModel.getUserNo());
-        if (Objects.isNull(verystatusGoodsUserModel)){
-            logUtil.infoWarn(V1,V2,v3,"没有查询到记录", verystatusGoodsUserCo.getGoodsSku(), userModel.getUserNo());
+        VerystatusGoodsUserModel verystatusGoodsUserModel = verystatusGoodsUserMapper.getInfo(verystatusGoodsUserCo.getGoodsSku(), userModel.getUserNo());
+        if (Objects.isNull(verystatusGoodsUserModel)) {
+            logUtil.infoWarn(V1, V2, v3, "没有查询到记录", verystatusGoodsUserCo.getGoodsSku(), userModel.getUserNo());
             throw new ReturnException(ReturnEnum.NO_FUND_USER_GOODS);
         }
         if (VerystatusGoodsMapper.price_free.equals(useType)) {
@@ -266,7 +272,7 @@ public class VerystatusGoodsUserServiceImpl implements VerystatusGoodsUserServic
         verystatusGoodsUserModel.setContentImg(verystatusGoodsUserCo.getContentImg());
         verystatusGoodsUserModel.setContent(verystatusGoodsUserCo.getContent());
 
-        if (verystatusGoodsUserModel.getRepeatUseNum() >= verystatusGoodsUserModel.getRepeatTotalNum()){
+        if (verystatusGoodsUserModel.getRepeatUseNum() >= verystatusGoodsUserModel.getRepeatTotalNum()) {
             verystatusGoodsUserModel.setIsFinish(VerystatusGoodsUserMapper.IS_FINISH);
         }
         verystatusGoodsUserCache.updateUserGoods(verystatusGoodsUserModel);
@@ -275,18 +281,19 @@ public class VerystatusGoodsUserServiceImpl implements VerystatusGoodsUserServic
 
     /**
      * 新增订单记录
-     * @param userModel 用户信息
-     * @param verystatusGoodsUserCo 用户商品信息
+     *
+     * @param userModel                用户信息
+     * @param verystatusGoodsUserCo    用户商品信息
      * @param verystatusCoinOrderModel 订单信息
      */
-    public void addOrder(VerystatusUserModel userModel, VerystatusGoodsUserCo verystatusGoodsUserCo,VerystatusCoinOrderModel verystatusCoinOrderModel){
+    public void addOrder(VerystatusUserModel userModel, VerystatusGoodsUserCo verystatusGoodsUserCo, VerystatusCoinOrderModel verystatusCoinOrderModel) {
         VerystatusGoodsEnum verystatusGoodsEnum = VerystatusGoodsEnum.getGoodsEnum(verystatusGoodsUserCo.getGoodsSku());
         VerystatusCoinOrderInfoModel verystatusCoinOrderInfoModel = new VerystatusCoinOrderInfoModel();
 
-        if (Objects.isNull(verystatusCoinOrderModel.getOldCoin())){
+        if (Objects.isNull(verystatusCoinOrderModel.getOldCoin())) {
             verystatusCoinOrderModel.setOldCoin(BigDecimal.valueOf(0));
         }
-        if (Objects.isNull(verystatusCoinOrderModel.getNewCoin())){
+        if (Objects.isNull(verystatusCoinOrderModel.getNewCoin())) {
             verystatusCoinOrderModel.setNewCoin(BigDecimal.valueOf(0));
         }
         verystatusCoinOrderModel.setUserNo(userModel.getUserNo());
@@ -303,16 +310,17 @@ public class VerystatusGoodsUserServiceImpl implements VerystatusGoodsUserServic
         verystatusCoinOrderInfoModel.setContent(verystatusGoodsUserCo.getContent());
         verystatusCoinOrderInfoModel.setSource(verystatusCoinOrderModel.getSource());
 
-        verystatusCoinOrderCache.addOrder(verystatusCoinOrderModel,verystatusCoinOrderInfoModel);
+        verystatusCoinOrderCache.addOrder(verystatusCoinOrderModel, verystatusCoinOrderInfoModel);
     }
 
 
     /**
      * 缓存数据返回接口
+     *
      * @param verystatusGoodsUserCo 缓存数据
      * @return 接口数据
      */
-    public VerystatusGoodsUserInfoResponse getResByCo(VerystatusGoodsUserCo verystatusGoodsUserCo){
+    public VerystatusGoodsUserInfoResponse getResByCo(VerystatusGoodsUserCo verystatusGoodsUserCo) {
         VerystatusGoodsUserInfoResponse verystatusGoodsUserInfoResponse = new VerystatusGoodsUserInfoResponse();
         verystatusGoodsUserInfoResponse.setGoodsSku(verystatusGoodsUserCo.getGoodsSku());
         verystatusGoodsUserInfoResponse.setPriceType(verystatusGoodsUserCo.getPriceType());
@@ -329,21 +337,20 @@ public class VerystatusGoodsUserServiceImpl implements VerystatusGoodsUserServic
         return verystatusGoodsUserInfoResponse;
     }
 
-    public boolean getGoodsContent(VerystatusUserModel userModel, VerystatusCoinOrderModel verystatusCoinOrderModel,VerystatusGoodsUserCo verystatusGoodsUserCo, VerystatusPayGoodsRequest verystatusPayGoodsRequest){
-        boolean res =  verystatusThirdService.getThirdContent(verystatusGoodsUserCo,verystatusPayGoodsRequest);
-        if (res){
+    public boolean getGoodsContent(VerystatusUserModel userModel, VerystatusCoinOrderModel verystatusCoinOrderModel, VerystatusGoodsUserCo verystatusGoodsUserCo, VerystatusPayGoodsRequest verystatusPayGoodsRequest) {
+        boolean res = verystatusThirdService.getThirdContent(verystatusGoodsUserCo, verystatusPayGoodsRequest, userModel.getUserNo());
+        if (res) {
             verystatusGoodsCache.addGetTime(verystatusGoodsUserCo.getGoodsSku());
-            addOrder(userModel,verystatusGoodsUserCo,verystatusCoinOrderModel);
+            addOrder(userModel, verystatusGoodsUserCo, verystatusCoinOrderModel);
         }
         return res;
     }
 
 
-
     @Override
     public VerystatusGoodsMoreResponse getGoodsMore(VerystatusUserModel verystatusUserModel, VerystatusGoodsMoreRequest verystatusGoodsMoreRequest) {
         Object content = verystatusThirdService.thirdPage(verystatusGoodsMoreRequest);
-        if (Objects.isNull(content)){
+        if (Objects.isNull(content)) {
             return null;
         }
         VerystatusGoodsMoreResponse verystatusGoodsMoreResponse = new VerystatusGoodsMoreResponse();

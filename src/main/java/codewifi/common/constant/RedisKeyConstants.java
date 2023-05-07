@@ -115,6 +115,10 @@ public class RedisKeyConstants {
 	public static final String VERY_WEATHER_CITY_RESPONSE = VERY_STATUS + "third:weather:city:by:name:"; //根据名字获得城市
 	public static final String VERY_WEATHER_WEATHER_RESPONSE = VERY_STATUS + "third:weather:weather:by:city:"; //根据城市id获取天气
 
+	public static final String VERY_LOT_USER_COMMON = VERY_STATUS + "third:lot:user:common:"; //抽签解签
+	public static final String VERY_LOT_USER_MAN = VERY_STATUS + "third:lot:user:man:"; //抽签解签
+	public static final String VERY_LOT_USER_MONEY = VERY_STATUS + "third:lot:user:money:"; //抽签解签
+
 
 
 	public static final String VERY_LOCK = "very:lock:";

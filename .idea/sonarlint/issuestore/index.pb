@@ -102,8 +102,6 @@ q
 Asrc/main/java/codewifi/repository/model/VerystatusGoodsModel.java,f/3/f353f4b277a99a762bdca37423a0a47386383983
 l
 <src/main/java/codewifi/service/impl/WifiInfoServiceImpl.java,d/9/d9a2a9d807458a759b96a93cc979b5daf8e16925
-s
-Csrc/main/java/codewifi/service/impl/UserLoginCommonServiceImpl.java,a/9/a94721ecf7cb91c5a7cf6930ef3db663d2f700a1
 w
 Gsrc/main/java/codewifi/repository/mapper/UserWithdrawalOrderMapper.java,b/c/bc516a050ae62c7c91073ae10788761ab4b6d8d1
 q
@@ -130,8 +128,6 @@ v
 Fsrc/main/java/codewifi/repository/model/VerystatusMenuConfigModel.java,e/a/ea1d00cc9b1845e97c99504e0312f0adeae03df7
 x
 Hsrc/main/java/codewifi/repository/mapper/VerystatusMenuConfigMapper.java,c/e/ce81409debec56cafdadf55657fa504ac5b627dd
-v
-Fsrc/main/java/codewifi/repository/cache/VerystatusMenuConfigCache.java,d/7/d7708a09bac66ee1f33bdbd671fc99c1476016af
 u
 Esrc/main/java/codewifi/response/user/VerystatusGoodsUserResponse.java,c/5/c5f5b8ab27d60311fa0f3c823e0dfd3629e153ba
 s

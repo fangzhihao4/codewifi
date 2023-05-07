@@ -4,8 +4,10 @@ import codewifi.annotation.exception.ReturnException;
 import codewifi.common.constant.ReturnEnum;
 import codewifi.common.constant.enums.VerystatusGoodsEnum;
 import codewifi.common.constant.enums.thrid.HoroscopeEnum;
+import codewifi.repository.cache.VerystatusLotCache;
 import codewifi.repository.co.ThirdVhanHotCo;
 import codewifi.repository.co.ThirdWeatherCityCo;
+import codewifi.repository.co.ThirdWeatherCo;
 import codewifi.repository.co.VerystatusGoodsUserCo;
 import codewifi.repository.third.*;
 import codewifi.request.very.VerystatusGoodsMoreRequest;
@@ -38,9 +40,10 @@ public class VerystatusThirdServiceImpl implements VerystatusThirdService {
     private final ThirdVhanImgCache thirdVhanImgCache;
     private final ThirdWeatherCache thirdWeatherCache;
     private final OpenaiService openaiService;
+    private final VerystatusLotCache verystatusLotCache;
 
     @Override
-    public boolean getThirdContent(VerystatusGoodsUserCo verystatusGoodsUserCo, VerystatusPayGoodsRequest verystatusPayGoodsRequest) {
+    public boolean getThirdContent(VerystatusGoodsUserCo verystatusGoodsUserCo, VerystatusPayGoodsRequest verystatusPayGoodsRequest, String userNo) {
         if (verystatusGoodsUserCo.getGoodsSku().equals(VerystatusGoodsEnum.STAR_TODAY.getGoodsSku())){
             return starContent(HoroscopeEnum.TODAY,verystatusGoodsUserCo,verystatusPayGoodsRequest);
         }
@@ -115,22 +118,54 @@ public class VerystatusThirdServiceImpl implements VerystatusThirdService {
         if (VerystatusGoodsEnum.WEATHER_CITY.getGoodsSku().equals(verystatusGoodsUserCo.getGoodsSku())){
             return weather(verystatusGoodsUserCo,verystatusPayGoodsRequest);
         }
-
+        if (VerystatusGoodsEnum.LOT_COMMON.getGoodsSku().equals(verystatusPayGoodsRequest.getGoodsSku())){
+            verystatusGoodsUserCo.setContent(verystatusLotCache.getUserCommon(userNo,2));
+            verystatusGoodsUserCo.setContentImg("2");
+            return true;
+        }
+        if (VerystatusGoodsEnum.LOT_MAN.getGoodsSku().equals(verystatusPayGoodsRequest.getGoodsSku())){
+            verystatusGoodsUserCo.setContent(verystatusLotCache.getUserMan(userNo,2));
+            verystatusGoodsUserCo.setContentImg("2");
+            return true;
+        }
+        if (VerystatusGoodsEnum.LOT_MONEY.getGoodsSku().equals(verystatusPayGoodsRequest.getGoodsSku())){
+            verystatusGoodsUserCo.setContent(verystatusLotCache.getUserMoney(userNo,2));
+            verystatusGoodsUserCo.setContentImg("2");
+            return true;
+        }
         return false;
     }
 
     @Override
-    public boolean startGoodsInfo(VerystatusGoodsUserCo verystatusGoodsUserCo, VerystatusPayGoodsRequest verystatusPayGoodsRequest) {
+    public boolean startGoodsInfo(VerystatusGoodsUserCo verystatusGoodsUserCo, VerystatusPayGoodsRequest verystatusPayGoodsRequest, String userNo) {
         if ((verystatusGoodsUserCo.getGoodsSku() >= VerystatusGoodsEnum.OPENAI_USER_NAME.getGoodsSku()) &&
                 (verystatusGoodsUserCo.getGoodsSku() <= VerystatusGoodsEnum.OPENAI_MAX.getGoodsSku())
         ){
             verystatusGoodsUserCo.setContent("");
             return false;
         }
-        return getThirdContent(verystatusGoodsUserCo,verystatusPayGoodsRequest);
-        //        if (verystatusGoodsUserCo.getGoodsSku().equals(VerystatusGoodsEnum.STAR_TODAY.getGoodsSku())){
-//            starContent(HoroscopeEnum.TODAY,verystatusGoodsUserCo,verystatusPayGoodsRequest);
-//        }
+        if (VerystatusGoodsEnum.LOT_COMMON.getGoodsSku().equals(verystatusPayGoodsRequest.getGoodsSku())){
+            verystatusGoodsUserCo.setContent(verystatusLotCache.getUserCommon(userNo,1));
+            verystatusGoodsUserCo.setContentImg("1");
+            return true;
+        }
+
+        if (VerystatusGoodsEnum.LOT_MAN.getGoodsSku().equals(verystatusPayGoodsRequest.getGoodsSku())){
+            verystatusGoodsUserCo.setContent(verystatusLotCache.getUserMan(userNo,1));
+            verystatusGoodsUserCo.setContentImg("1");
+            return true;
+        }
+        if (VerystatusGoodsEnum.LOT_MONEY.getGoodsSku().equals(verystatusPayGoodsRequest.getGoodsSku())){
+            verystatusGoodsUserCo.setContent(verystatusLotCache.getUserMoney(userNo,1));
+            verystatusGoodsUserCo.setContentImg("1");
+            return true;
+        }
+        if(VerystatusGoodsEnum.WEATHER_CITY.getGoodsSku().equals(verystatusGoodsUserCo.getGoodsSku())){
+            return false;
+        }
+
+        return getThirdContent(verystatusGoodsUserCo,verystatusPayGoodsRequest,userNo);
+
     }
 
     @Override
@@ -293,7 +328,8 @@ public class VerystatusThirdServiceImpl implements VerystatusThirdService {
         if ("weather".equalsIgnoreCase(verystatusPayGoodsRequest.getParamFirst())){
             WeatherResponse weatherResponse = thirdWeatherCache.getByCityId(verystatusPayGoodsRequest.getParamTwo());
             if (Objects.nonNull(weatherResponse)){
-                verystatusGoodsUserCo.setOther(weatherResponse);
+                ThirdWeatherCo content = thirdWeatherCache.getContent(weatherResponse);
+                verystatusGoodsUserCo.setOther(content);
                 return true;
             }
         }

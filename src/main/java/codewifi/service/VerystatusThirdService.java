@@ -7,9 +7,9 @@ import org.springframework.stereotype.Service;
 
 @Service
 public interface VerystatusThirdService {
-    boolean getThirdContent(VerystatusGoodsUserCo verystatusGoodsUserCo, VerystatusPayGoodsRequest verystatusPayGoodsRequest);
+    boolean getThirdContent(VerystatusGoodsUserCo verystatusGoodsUserCo, VerystatusPayGoodsRequest verystatusPayGoodsRequest, String userNo);
 
-    boolean startGoodsInfo(VerystatusGoodsUserCo verystatusGoodsUserCo, VerystatusPayGoodsRequest verystatusPayGoodsRequest);
+    boolean startGoodsInfo(VerystatusGoodsUserCo verystatusGoodsUserCo, VerystatusPayGoodsRequest verystatusPayGoodsRequest, String userNo);
 
     Object thirdPage(VerystatusGoodsMoreRequest verystatusGoodsMoreRequest);
 }
