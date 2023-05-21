@@ -94,8 +94,6 @@ l
 <src/main/java/codewifi/repository/cache/UserProfitCache.java,e/0/e01497b59b14afef5b7fc85ce6ad73702623fd5b
 h
 8src/main/java/codewifi/repository/mapper/UserMapper.java,5/3/5355d9cc64a17dc7c5ccf83698c8c0770f02c4d4
-l
-<src/main/java/codewifi/common/constant/enums/NoNameEnum.java,6/4/64acdeb041bd1b63fb04be6920c7b45c040d42df
 p
 @src/main/java/codewifi/common/constant/enums/LoginTypeEnums.java,3/f/3f79840ca4616c03003a28eaac43fcac27c2c637
 q
@@ -148,8 +146,6 @@ l
 <src/main/java/codewifi/request/user/UserRegisterRequest.java,5/9/59567469e831eda7f39a7e71170f04dcbc1f846d
 n
 >src/main/java/codewifi/request/user/UserUpNicknameRequest.java,f/d/fd40f5a042281b2f71ee074c6b88f7982f072275
-r
-Bsrc/main/java/codewifi/repository/mapper/VerystatusUserMapper.java,3/5/35b30fd60fcab0eefcbec16a849b53482321f9a2
 l
 <src/main/java/codewifi/request/user/WxUserHeadUpRequest.java,e/7/e73a94e5b7f132262285b78cabe29c8030b5d8e3
 k

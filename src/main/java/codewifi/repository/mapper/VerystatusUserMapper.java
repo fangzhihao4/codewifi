@@ -28,6 +28,7 @@ public class VerystatusUserMapper {
     public static final byte STATUS_DEL = 2; //已删除
 
     public static final Byte WX_REGISTER = 1; //登录类型
+    public static final Byte WX_ALL_REGISTER = 2; //全能知道
     public static final Byte PWD_REGISTER = 2;
 
     public static final int USERNAME_LENGTH = 45;

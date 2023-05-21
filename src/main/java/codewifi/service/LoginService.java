@@ -15,7 +15,7 @@ public interface LoginService {
 
     UserLoginResponse wxLogin(String code);
 
-    VerystatusUserLoginResponse wxVerystatusLogin(String code);
+    VerystatusUserLoginResponse wxVerystatusLogin(String code, Integer type);
 
     void wxVerystatusUpHead(String token, VerystatusUserModel verystatusUserModel,WxUserHeadUpRequest wxUserHeadUpRequest);
 

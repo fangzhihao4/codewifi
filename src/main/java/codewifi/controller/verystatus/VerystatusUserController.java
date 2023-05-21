@@ -34,7 +34,7 @@ public class VerystatusUserController {
     public Response<VerystatusUserLoginResponse> wxLogin(@Valid @ProRequestBody WxLoginCodeRequest request) {
         String v3 = "userLogin";
         logUtil.info(V1, V2, v3, "请求日志", request, null);
-        VerystatusUserLoginResponse verystatusUserLoginResponse = loginService.wxVerystatusLogin(request.getCode());
+        VerystatusUserLoginResponse verystatusUserLoginResponse = loginService.wxVerystatusLogin(request.getCode(), request.getType());
         logUtil.info(V1, V2, v3, "返回日志", request, verystatusUserLoginResponse);
         return Response.data(verystatusUserLoginResponse);
     }

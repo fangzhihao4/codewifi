@@ -66,6 +66,9 @@ public class LoginServiceImpl implements LoginService {
     private final String very_status_appId = "wxf0dda273a342bda7";
     private final String very_status_appSecret = "5fad85edc3057a07191c390f2fa4ce83";
 
+    private final String all_know_appId = "wx2f25e52fdbe43d0e";
+    private final String all_know_appSecret = "a619da65d8960155c5f6ff89a827f06c";
+
     @Override
     public UserLoginResponse pwdLogin(UserLoginRequest request) {
         String v3 = "pwdLogin";
@@ -125,14 +128,23 @@ public class LoginServiceImpl implements LoginService {
 
     @Transactional
     @Override
-    public VerystatusUserLoginResponse wxVerystatusLogin(String code) {
+    public VerystatusUserLoginResponse wxVerystatusLogin(String code, Integer type) {
         String v3 = "wxLogin";
         if (StringUtils.isEmpty(code)) {
             logUtil.infoBug(V1, V2, v3, "wx登录缺失code", code, null);
             throw new ReturnException(ReturnEnum.TOKEN_CODE_ERROR);
         }
 
-        WechatJsCode2SessionResponse wechatJsCode2SessionResponse = wxApiService.snsJsCode2Session(code, very_status_appId, very_status_appSecret);
+        String appid = very_status_appId;
+        String appSecret = very_status_appSecret;
+        byte typeReg = VerystatusUserMapper.WX_REGISTER;
+        if (Objects.nonNull(type) && (type == 2)){
+            typeReg = VerystatusUserMapper.WX_ALL_REGISTER;
+            appid = all_know_appId;
+            appSecret = all_know_appSecret;
+        }
+
+        WechatJsCode2SessionResponse wechatJsCode2SessionResponse = wxApiService.snsJsCode2Session(code, appid, appSecret);
         if (Objects.isNull(wechatJsCode2SessionResponse) || StringUtils.isEmpty(wechatJsCode2SessionResponse.getOpenid())) {
             logUtil.infoBug(V1, V2, v3, "wx登录返回空数据", code, wechatJsCode2SessionResponse);
             throw new ReturnException(ReturnEnum.WX_LOGIN_FAIL);
@@ -153,7 +165,7 @@ public class LoginServiceImpl implements LoginService {
             verystatusUserModel.setUserNo(userNo);
             verystatusUserModel.setNickname("微信用户" + userNo.substring(userNo.length() - 6));
             verystatusUserModel.setOpenid(wechatJsCode2SessionResponse.getOpenid());
-            verystatusUserModel.setType(VerystatusUserMapper.WX_REGISTER);
+            verystatusUserModel.setType(typeReg);
             verystatusUserModel.setHeadImgUrl(VerystatusUserMapper.HEADER_DEFAULT);
             verystatusUserModel.setHeadType(VerystatusUserMapper.HEAD_TYPE_HTTPS);
             userLoginCache.addVerystatusUserByWx(verystatusUserModel);
