@@ -85,8 +85,6 @@ i
 j
 :src/main/java/codewifi/request/wifi/WifiUpdateRequest.java,f/3/f3967c78888209eb9115b8e36a5e515d0d84b9ab
 o
-?src/main/java/codewifi/repository/cache/UserWifiCountCache.java,8/a/8abfbcef6184b1d9fa0b5b2b3d4bc08a761cac5b
-o
 ?src/main/java/codewifi/repository/cache/LinkWIfiRedisCache.java,3/9/3927d8da2feb5eac5dfd1478bc2fa8cc857ba578
 r
 Bsrc/main/java/codewifi/repository/mapper/UserMoneyOrderMapper.java,e/b/ebe8fea05dc118338c84344e502a0eaad14ab18d
@@ -132,8 +130,6 @@ s
 Csrc/main/java/codewifi/common/constant/enums/LinkOrderTypeEnum.java,d/a/da8e87cb8d332a55c2f64fa5cdb76bad6b207816
 x
 Hsrc/main/java/codewifi/repository/mapper/VerystatusUserWalletMapper.java,7/2/72afa145288e6a80b35cdd68a9e9c538b9f4e038
-w
-Gsrc/main/java/codewifi/repository/mapper/VerystatusCoinOrderMapper.java,0/0/0045156059908dd011b0bbc087eeb09ec792badb
 q
 Asrc/main/java/codewifi/repository/mapper/VerystatusMsgMapper.java,7/d/7dcbedfd53391746c75533fb0160fd1561ad690f
 Y

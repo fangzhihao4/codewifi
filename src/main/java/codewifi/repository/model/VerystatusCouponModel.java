@@ -2,7 +2,7 @@ package codewifi.repository.model;
 
 import lombok.Data;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Data
 public class VerystatusCouponModel {
@@ -14,8 +14,8 @@ public class VerystatusCouponModel {
     String title;
     String subTitle;
     String desc;
-    LocalDate startDate;
-    LocalDate endDate;
+    LocalDateTime startTime;
+    LocalDateTime endTime;
     Integer sort;
     Integer status;
 }
